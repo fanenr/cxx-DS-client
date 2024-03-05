@@ -19,7 +19,7 @@ public:
     ui->setupUi (this);
 
     btns = new QButtonGroup (this);
-    btns->addButton (ui->rbtn, 1);
+    btns->addButton (ui->rbtn1, 1);
     btns->addButton (ui->rbtn2, 2);
   }
 
@@ -29,7 +29,7 @@ private:
   int
   category ()
   {
-    if (ui->rbtn->isChecked ())
+    if (ui->rbtn1->isChecked ())
       return 1;
     if (ui->rbtn2->isChecked ())
       return 2;

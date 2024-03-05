@@ -10,11 +10,23 @@
     <height>400</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Qt Demo</string>
   </property>
   <widget class="QWidget" name="center">
-   <layout class="QVBoxLayout" name="vlay">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QVBoxLayout" name="vlay" stretch="0,0,0,0,0,0,0">
     <property name="spacing">
      <number>6</number>
     </property>
@@ -22,21 +34,34 @@
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <property name="leftMargin">
-     <number>24</number>
+     <number>48</number>
     </property>
     <property name="topMargin">
-     <number>24</number>
+     <number>48</number>
     </property>
     <property name="rightMargin">
-     <number>24</number>
+     <number>48</number>
     </property>
     <property name="bottomMargin">
-     <number>24</number>
+     <number>48</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="hlay">
+     <spacer name="vsp1">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="hlay1">
       <property name="bottomMargin">
-       <number>24</number>
+       <number>0</number>
       </property>
       <item>
        <widget class="QLabel" name="label">
@@ -62,18 +87,31 @@
      </layout>
     </item>
     <item>
+     <spacer name="vsp2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QFormLayout" name="flay">
       <property name="horizontalSpacing">
-       <number>24</number>
+       <number>36</number>
       </property>
       <property name="verticalSpacing">
-       <number>12</number>
+       <number>6</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="bottomMargin">
-       <number>48</number>
+       <number>0</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label2">
@@ -83,7 +121,14 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="ledit"/>
+       <widget class="QLineEdit" name="ledit1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label3">
@@ -93,7 +138,17 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="ledit2"/>
+       <widget class="QLineEdit" name="ledit2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label4">
@@ -103,29 +158,105 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <layout class="QHBoxLayout" name="hlay2">
+       <layout class="QHBoxLayout" name="hlay2" stretch="0,0,0,0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
         <item>
-         <widget class="QRadioButton" name="rbtn2">
+         <spacer name="hsp1">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rbtn1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
           <property name="text">
            <string>Student</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="rbtn">
+         <spacer name="hsp2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rbtn2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Merchant</string>
           </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="hsp3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
      </layout>
     </item>
     <item>
+     <spacer name="vsp3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="hlay3">
       <property name="bottomMargin">
-       <number>24</number>
+       <number>0</number>
       </property>
       <item>
        <widget class="QPushButton" name="pbtn1">
@@ -135,8 +266,17 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Sign in</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -154,6 +294,19 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <spacer name="vsp4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
