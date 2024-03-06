@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Sreg</class>
- <widget class="QMainWindow" name="Sreg">
+ <class>Reg</class>
+ <widget class="QMainWindow" name="Reg">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>学生注册</string>
+   <string>注册</string>
   </property>
   <widget class="QWidget" name="center">
    <layout class="QVBoxLayout" name="vlay">
@@ -47,10 +47,11 @@
         <property name="font">
          <font>
           <pointsize>18</pointsize>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
-         <string>学生注册</string>
+         <string>注册</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -80,7 +81,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label2">
         <property name="text">
-         <string>学号</string>
+         <string>文本</string>
         </property>
        </widget>
       </item>
@@ -90,14 +91,14 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label3">
         <property name="text">
-         <string>昵称</string>
+         <string>文本</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label4">
         <property name="text">
-         <string>电话</string>
+         <string>文本</string>
         </property>
        </widget>
       </item>
