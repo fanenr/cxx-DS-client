@@ -2,8 +2,7 @@
 #define MAIN_H
 
 #include "ui_main.h"
-#include "ui_mreg.h"
-#include "ui_sreg.h"
+#include "ui_reg.h"
 #include <QButtonGroup>
 #include <QMessageBox>
 
@@ -11,10 +10,10 @@ class Sreg : public QMainWindow
 {
 private:
   Q_OBJECT
-  Ui::Sreg *ui;
+  Ui::Reg *ui;
 
 public:
-  Sreg (QWidget *parent = nullptr) : ui (new Ui::Sreg) { ui->setupUi (this); }
+  Sreg (QWidget *parent = nullptr);
   ~Sreg () { delete ui; }
 
 public:
@@ -24,7 +23,7 @@ private slots:
   void
   on_pbtn1_clicked ()
   {
-    this->close ();
+    close ();
   }
 };
 
@@ -32,10 +31,10 @@ class Mreg : public QMainWindow
 {
 private:
   Q_OBJECT
-  Ui::Mreg *ui;
+  Ui::Reg *ui;
 
 public:
-  Mreg (QWidget *parent = nullptr) : ui (new Ui::Mreg) { ui->setupUi (this); }
+  Mreg (QWidget *parent = nullptr);
   ~Mreg () { delete ui; }
 
 public:
@@ -45,7 +44,7 @@ private slots:
   void
   on_pbtn1_clicked ()
   {
-    this->close ();
+    close ();
   }
 };
 
@@ -77,28 +76,42 @@ inline Main::Main (QWidget *parent) : QMainWindow (parent), ui (new Ui::Main)
   btns->addButton (ui->rbtn2, 2);
 }
 
+inline Sreg::Sreg (QWidget *parent) : ui (new Ui::Reg)
+{
+  ui->setupUi (this);
+
+  setWindowTitle (tr ("学生注册"));
+  ui->label1->setText (tr ("学生注册"));
+  ui->label2->setText (tr ("学号"));
+  ui->label3->setText (tr ("昵称"));
+  ui->label4->setText (tr ("电话"));
+}
+
 inline void
 Sreg::reg (QString const &user, QString const &pass)
 {
-  if (user.isEmpty () || pass.isEmpty ())
+  if (isVisible ())
     return;
+  show ();
+}
 
-  if (this->isVisible ())
-    return;
+inline Mreg::Mreg (QWidget *parent) : ui (new Ui::Reg)
+{
+  ui->setupUi (this);
 
-  this->show ();
+  setWindowTitle (tr ("商户注册"));
+  ui->label1->setText (tr ("商户注册"));
+  ui->label2->setText (tr ("名称"));
+  ui->label3->setText (tr ("电话"));
+  ui->label4->setText (tr ("位置"));
 }
 
 inline void
 Mreg::reg (QString const &user, QString const &pass)
 {
-  if (user.isEmpty () || pass.isEmpty ())
+  if (isVisible ())
     return;
-
-  if (this->isVisible ())
-    return;
-
-  this->show ();
+  show ();
 }
 
 inline int
@@ -117,13 +130,22 @@ Main::on_pbtn1_clicked ()
   static Sreg sreg;
   static Mreg mreg;
 
+  auto const &user = ui->ledit1->text ();
+  auto const &pass = ui->ledit2->text ();
+
+  if (user.isEmpty () || pass.isEmpty ())
+    {
+      QMessageBox::warning (this, tr ("提示"), tr ("请输入帐号密码"));
+      return;
+    }
+
   switch (category ())
     {
     case 1:
-      sreg.reg (ui->ledit1->text (), ui->ledit2->text ());
+      sreg.reg (user, pass);
       break;
     case 2:
-      mreg.reg (ui->ledit1->text (), ui->ledit2->text ());
+      mreg.reg (user, pass);
       break;
     default:
       break;
