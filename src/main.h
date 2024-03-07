@@ -23,6 +23,8 @@ class Reg : public QMainWindow
 private:
   Q_OBJECT
   Ui::Reg *ui = new Ui::Reg;
+
+  QNetworkRequest req;
   QNetworkAccessManager *nam = nullptr;
 
   int type;
@@ -30,7 +32,7 @@ private:
   QString pass;
 
 public:
-  Reg (QWidget *parent) : QMainWindow (parent) { ui->setupUi (this); };
+  Reg (QWidget *parent);
   ~Reg () { delete ui; }
 
 private:
@@ -46,12 +48,18 @@ private slots:
   void on_pbtn2_clicked ();
 };
 
+inline Reg::Reg (QWidget *parent) : QMainWindow (parent)
+{
+  ui->setupUi (this);
+
+  nam = new QNetworkAccessManager (this);
+  req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
+  connect (nam, &QNetworkAccessManager::finished, this, &Reg::req_finished);
+};
+
 inline void
 Reg::on_pbtn2_clicked ()
 {
-  if (!nam)
-    nam = new QNetworkAccessManager (this);
-
   auto str1 = ui->ledit1->text ();
   auto str2 = ui->ledit2->text ();
   auto str3 = ui->ledit3->text ();
@@ -85,11 +93,8 @@ Reg::on_pbtn2_clicked ()
       return;
     }
 
-  auto req = QNetworkRequest (req_url);
-  req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
+  req.setUrl (req_url);
   auto req_json = QJsonDocument (req_data).toJson (QJsonDocument::Compact);
-
-  connect (nam, &QNetworkAccessManager::finished, this, &Reg::req_finished);
   nam->post (req, req_json);
 }
 
@@ -98,14 +103,17 @@ Reg::req_finished (QNetworkReply *reply)
 {
   if (reply->error ())
     {
-      QMessageBox::warning (this, tr ("提示"), tr ("请求失败"));
+      QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
       return;
     }
 
   auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
   if (res["code"] != 0)
-    QMessageBox::warning (this, tr ("注册失败"),
-                          res["data"].toString (tr ("信息丢失")));
+    {
+      QMessageBox::warning (this, tr ("失败"),
+                            res["data"].toString (tr ("信息丢失")));
+      return;
+    }
 
   this->close ();
   QMessageBox::information (nullptr, tr ("提示"), tr ("注册成功"));
@@ -119,12 +127,25 @@ private:
   Ui::Main *ui = new Ui::Main;
   QButtonGroup *btns = nullptr;
 
+  QNetworkRequest req;
+  QNetworkAccessManager *nam = nullptr;
+
 public:
   explicit Main (QWidget *parent = nullptr);
   ~Main () { delete ui; }
 
 private:
-  int category ();
+  void req_finished (QNetworkReply *reply);
+
+  int
+  category ()
+  {
+    if (ui->rbtn1->isChecked ())
+      return 1;
+    if (ui->rbtn2->isChecked ())
+      return 2;
+    return 0;
+  }
 
 private slots:
   void on_pbtn1_clicked ();
@@ -138,16 +159,10 @@ inline Main::Main (QWidget *parent) : QMainWindow (parent)
   btns = new QButtonGroup (this);
   btns->addButton (ui->rbtn1, 1);
   btns->addButton (ui->rbtn2, 2);
-}
 
-inline int
-Main::category ()
-{
-  if (ui->rbtn1->isChecked ())
-    return 1;
-  if (ui->rbtn2->isChecked ())
-    return 2;
-  return 0;
+  nam = new QNetworkAccessManager (this);
+  req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
+  connect (nam, &QNetworkAccessManager::finished, this, &Main::req_finished);
 }
 
 inline void
@@ -198,15 +213,55 @@ Main::on_pbtn1_clicked ()
 inline void
 Main::on_pbtn2_clicked ()
 {
+  auto user = ui->ledit1->text ();
+  auto pass = ui->ledit2->text ();
+
+  if (user.isEmpty () || pass.isEmpty ())
+    {
+      QMessageBox::warning (this, tr ("提示"), tr ("请输入帐号密码"));
+      return;
+    }
+
+  QUrl req_url;
+  QJsonObject req_data;
+  req_data["user"] = user;
+  req_data["pass"] = pass;
+
   switch (category ())
     {
     case 1:
+      req_url = URL_STUDENT_LOG;
       break;
     case 2:
+      req_url = URL_MERCHANT_LOG;
       break;
     default:
-      break;
+      return;
     }
+
+  req.setUrl (req_url);
+  auto req_json = QJsonDocument (req_data).toJson (QJsonDocument::Compact);
+  nam->post (req, req_json);
+}
+
+inline void
+Main::req_finished (QNetworkReply *reply)
+{
+  if (reply->error ())
+    {
+      QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
+      return;
+    }
+
+  auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
+  if (res["code"] != 0)
+    {
+      QMessageBox::warning (this, tr ("失败"),
+                            res["data"].toString (tr ("信息丢失")));
+      return;
+    }
+
+  QMessageBox::information (this, tr ("提示"), tr ("登录成功"));
 }
 
 #endif

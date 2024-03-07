@@ -6,4 +6,7 @@
 #define URL_STUDENT_NEW URL_BASE "/student/new"
 #define URL_MERCHANT_NEW URL_BASE "/merchant/new"
 
+#define URL_STUDENT_LOG URL_BASE "/student/log"
+#define URL_MERCHANT_LOG URL_BASE "/merchant/log"
+
 #endif
