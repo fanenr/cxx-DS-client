@@ -8,5 +8,3 @@ target("client")
     add_files("src/*.ui")
     add_files("src/*.cc")
     add_files("src/*.h")
-
-    add_defines("QT_DEBUG")
