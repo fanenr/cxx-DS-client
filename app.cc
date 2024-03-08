@@ -1,10 +1,10 @@
-#include "main.h"
+#include "log.h"
 
 int
 main (int argc, char *argv[])
 {
   QApplication app (argc, argv);
-  Main main;
-  main.show ();
+  Log log;
+  log.show ();
   return app.exec ();
 }

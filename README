@@ -1,5 +1,6 @@
 要求：
   1. Qt SDK
+  2. xmake
 
 构建：
   xmake
