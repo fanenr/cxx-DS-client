@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "http.h"
 #include "ui_main.h"
 #include "ui_reg.h"
 #include "util.h"
@@ -12,7 +13,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
 class Reg : public QMainWindow
@@ -21,7 +21,6 @@ class Reg : public QMainWindow
 
 private:
   Q_OBJECT
-  QNetworkRequest req;
   Ui::Reg *ui = new Ui::Reg;
 
   int type;
@@ -67,8 +66,6 @@ inline Reg::Reg (QWidget *parent, int category)
       ui->label4->setText (tr ("位置"));
       break;
     }
-
-  req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
 };
 
 inline void
@@ -84,6 +81,7 @@ Reg::on_pbtn2_clicked ()
       return;
     }
 
+  QString req_url;
   QJsonObject req_data;
   req_data["user"] = user;
   req_data["pass"] = pass;
@@ -94,28 +92,18 @@ Reg::on_pbtn2_clicked ()
       req_data["id"] = str1;
       req_data["name"] = str2;
       req_data["number"] = str3;
-      req.setUrl (QUrl (URL_STUDENT_NEW));
+      req_url = URL_STUDENT_NEW;
       break;
     case 2:
       req_data["name"] = str1;
       req_data["number"] = str2;
       req_data["position"] = str3;
-      req.setUrl (QUrl (URL_MERCHANT_NEW));
+      req_url = URL_MERCHANT_NEW;
       break;
-    default:
-      return;
     }
 
-  static QNetworkAccessManager *nam;
-  if (!nam)
-    {
-      nam = new QNetworkAccessManager (this);
-      connect (nam, &QNetworkAccessManager::finished, this,
-               &Reg::req_finished);
-    }
-
-  auto req_json = QJsonDocument (req_data).toJson (QJsonDocument::Compact);
-  nam->post (req, req_json);
+  Http http;
+  req_finished (http.post (req_url, req_data));
 }
 
 inline void
@@ -145,7 +133,6 @@ private:
   Q_OBJECT
   Reg *sreg = nullptr;
   Reg *mreg = nullptr;
-  QNetworkRequest req;
   Ui::Main *ui = new Ui::Main;
   QButtonGroup *btns = nullptr;
 
@@ -178,8 +165,6 @@ inline Main::Main (QWidget *parent) : QMainWindow (parent)
   btns = new QButtonGroup (this);
   btns->addButton (ui->rbtn1, 1);
   btns->addButton (ui->rbtn2, 2);
-
-  req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
 }
 
 inline void
@@ -230,31 +215,14 @@ Main::on_pbtn2_clicked ()
       return;
     }
 
+  QString req_url = (category () == 1) ? URL_STUDENT_LOG : URL_MERCHANT_LOG;
+
   QJsonObject req_data;
   req_data["user"] = user;
   req_data["pass"] = pass;
-  qInfo () << req_data;
 
-  switch (category ())
-    {
-    case 1:
-      req.setUrl (QUrl (URL_STUDENT_LOG));
-      break;
-    case 2:
-      req.setUrl (QUrl (URL_MERCHANT_LOG));
-      break;
-    }
-
-  static QNetworkAccessManager *nam;
-  if (!nam)
-    {
-      nam = new QNetworkAccessManager (this);
-      connect (nam, &QNetworkAccessManager::finished, this,
-               &Main::req_finished);
-    }
-
-  auto req_json = QJsonDocument (req_data).toJson (QJsonDocument::Compact);
-  nam->post (req, req_json);
+  Http http;
+  req_finished (http.post (req_url, req_data));
 }
 
 inline void
