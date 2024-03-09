@@ -1,4 +1,6 @@
 add_rules("mode.debug", "mode.release")
+set_policy("run.autobuild", true)
+
 set_languages("cxx17")
 
 target("client")
