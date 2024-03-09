@@ -1,4 +1,6 @@
 #include "home.h"
+#include "mod.h"
+#include "util.h"
 
 Home::Home (QWidget *parent, type typ) : QMainWindow (parent), typ (typ)
 {
@@ -42,4 +44,40 @@ Home::closeEvent (QCloseEvent *event)
 {
   QMainWindow::closeEvent (event);
   deleteLater ();
+}
+
+void
+Home::on_pbtn1_clicked ()
+{
+  Mod *mod;
+  static Mod *smod;
+  static Mod *mmod;
+
+  switch (typ)
+    {
+    case type::STUDENT:
+      if (!smod)
+        smod = new Mod (this, type::STUDENT, info);
+      mod = smod;
+      break;
+    case type::MERCHANT:
+      if (!mmod)
+        mmod = new Mod (this, type::MERCHANT, info);
+      mod = mmod;
+      break;
+    default:
+      break;
+    }
+
+  if (mod->isVisible ())
+    return;
+
+  mod->load_old ();
+  mod->show ();
+}
+
+void
+Home::on_pbtn2_clicked ()
+{
+  close ();
 }

@@ -42,9 +42,9 @@ Log::on_pbtn1_clicked ()
     }
 
   Reg *reg;
+  static Reg *sreg;
+  static Reg *mreg;
   auto typ = category ();
-  static Reg *sreg = nullptr;
-  static Reg *mreg = nullptr;
 
   switch (typ)
     {
