@@ -17,7 +17,7 @@ private:
   QMap<QString, QString> const &old;
 
 public:
-  Mod (QMainWindow *parent, type typ, decltype (old) info);
+  Mod (QMainWindow *parent, type typ, decltype (old) old);
   ~Mod () { delete ui; }
 
 private:
