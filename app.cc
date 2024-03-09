@@ -4,7 +4,7 @@ int
 main (int argc, char *argv[])
 {
   QApplication app (argc, argv);
-  Log log;
+  Log log (nullptr);
   log.show ();
   return app.exec ();
 }

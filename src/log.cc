@@ -1,7 +1,7 @@
-#include "http.h"
 #include "log.h"
+#include "home.h"
+#include "http.h"
 #include "reg.h"
-#include "util.h"
 
 #include <QButtonGroup>
 #include <QJsonDocument>
@@ -10,7 +10,7 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Log::Log (QWidget *parent) : QMainWindow (parent)
+Log::Log (QMainWindow *parent) : QMainWindow (parent)
 {
   ui->setupUi (this);
 
@@ -19,20 +19,19 @@ Log::Log (QWidget *parent) : QMainWindow (parent)
   btns->addButton (ui->rbtn2, 2);
 }
 
-int
+type
 Log::category ()
 {
   if (ui->rbtn1->isChecked ())
-    return 1;
+    return type::STUDENT;
   if (ui->rbtn2->isChecked ())
-    return 2;
+    return type::MERCHANT;
   abort ();
 }
 
 void
 Log::on_pbtn1_clicked ()
 {
-  auto type = category ();
   auto user = ui->ledit1->text ();
   auto pass = ui->ledit2->text ();
 
@@ -43,17 +42,23 @@ Log::on_pbtn1_clicked ()
     }
 
   Reg *reg;
-  switch (type)
+  auto typ = category ();
+  static Reg *sreg = nullptr;
+  static Reg *mreg = nullptr;
+
+  switch (typ)
     {
-    case 1:
+    case type::STUDENT:
       if (!sreg)
-        sreg = new Reg (this, 1);
+        sreg = new Reg (this, type::STUDENT);
       reg = sreg;
       break;
-    case 2:
+    case type::MERCHANT:
       if (!mreg)
-        mreg = new Reg (this, 2);
+        mreg = new Reg (this, type::MERCHANT);
       reg = mreg;
+      break;
+    default:
       break;
     }
 
@@ -77,7 +82,20 @@ Log::on_pbtn2_clicked ()
       return;
     }
 
-  QString req_url = (category () == 1) ? URL_STUDENT_LOG : URL_MERCHANT_LOG;
+  QString req_url;
+  auto typ = category ();
+
+  switch (typ)
+    {
+    case type::STUDENT:
+      req_url = URL_STUDENT_LOG;
+      break;
+    case type::MERCHANT:
+      req_url = URL_MERCHANT_LOG;
+      break;
+    default:
+      break;
+    }
 
   QJsonObject req_data;
   req_data["user"] = user;
@@ -97,6 +115,7 @@ Log::req_finished (QNetworkReply *reply)
     }
 
   auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
+
   if (res["code"] != 0)
     {
       QMessageBox::warning (this, tr ("失败"),
@@ -104,5 +123,17 @@ Log::req_finished (QNetworkReply *reply)
       return;
     }
 
-  QMessageBox::information (this, tr ("提示"), tr ("登录成功"));
+  QMap<QString, QString> info;
+  auto map = res["data"].toObject ().toVariantMap ();
+
+  for (auto it = map.cbegin (); it != map.cend (); it++)
+    info.insert (it.key (), it.value ().toString ());
+
+  auto home = new Home (nullptr, category ());
+  home->info = std::move (info);
+  home->load_info ();
+  home->show ();
+
+  this->close ();
+  QMessageBox::information (home, tr ("提示"), tr ("登录成功"));
 }

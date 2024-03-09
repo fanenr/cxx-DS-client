@@ -9,4 +9,11 @@
 #define URL_STUDENT_LOG URL_BASE "/student/log"
 #define URL_MERCHANT_LOG URL_BASE "/merchant/log"
 
+enum class type
+{
+  NONE,
+  STUDENT,
+  MERCHANT,
+};
+
 #endif

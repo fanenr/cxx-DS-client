@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include "ui_log.h"
+#include "util.h"
 
 class Reg;
 class QNetworkReply;
@@ -11,17 +12,15 @@ class Log : public QMainWindow
   Q_OBJECT
 
 private:
-  Reg *sreg = nullptr;
-  Reg *mreg = nullptr;
   Ui::Log *ui = new Ui::Log;
   QButtonGroup *btns = nullptr;
 
 public:
-  explicit Log (QWidget *parent = nullptr);
+  explicit Log (QMainWindow *parent);
   ~Log () { delete ui; }
 
 private:
-  int category ();
+  type category ();
   void req_finished (QNetworkReply *reply);
 
 private slots:
