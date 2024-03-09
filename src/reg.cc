@@ -98,5 +98,6 @@ Reg::req_finished (QNetworkReply *reply)
     }
 
   this->close ();
-  QMessageBox::information (parentWidget (), tr ("提示"), tr ("注册成功"));
+  QMessageBox::information (parentWidget (), tr ("提示"),
+                            tr ("注册成功，请返回登录"));
 }

@@ -14,7 +14,7 @@ class Mod : public QMainWindow
 private:
   type typ = type::NONE;
   Ui::Mod *ui = new Ui::Mod;
-  QMap<QString, QString> const &old;
+  QMap<QString, QString> &old;
 
 public:
   Mod (QMainWindow *parent, type typ, decltype (old) old);
