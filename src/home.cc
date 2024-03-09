@@ -36,3 +36,10 @@ Home::load_info ()
       break;
     }
 }
+
+void
+Home::closeEvent (QCloseEvent *event)
+{
+  QMainWindow::closeEvent (event);
+  deleteLater ();
+}

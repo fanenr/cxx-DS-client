@@ -22,6 +22,9 @@ public:
 
 public:
   void load_info ();
+
+private:
+  void closeEvent (QCloseEvent *event) override;
 };
 
 #endif
