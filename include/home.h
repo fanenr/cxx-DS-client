@@ -22,9 +22,11 @@ public:
 
 public:
   void load_info ();
-
-private:
   void closeEvent (QCloseEvent *event) override;
+
+private slots:
+  void on_pbtn1_clicked ();
+  void on_pbtn2_clicked ();
 };
 
 #endif

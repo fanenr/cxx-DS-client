@@ -9,6 +9,12 @@
 #define URL_STUDENT_LOG URL_BASE "/student/log"
 #define URL_MERCHANT_LOG URL_BASE "/merchant/log"
 
+#define URL_STUDENT_MOD URL_BASE "/student/mod"
+#define URL_MERCHANT_MOD URL_BASE "/merchant/mod"
+
+#define URL_STUDENT_DEL URL_BASE "/student/del"
+#define URL_MERCHANT_DEL URL_BASE "/merchant/del"
+
 enum class type
 {
   NONE,
