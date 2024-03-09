@@ -136,5 +136,4 @@ Log::req_finished (QNetworkReply *reply)
   home->show ();
 
   this->close ();
-  QMessageBox::information (home, tr ("提示"), tr ("登录成功"));
 }
