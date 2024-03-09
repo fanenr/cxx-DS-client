@@ -1,6 +1,5 @@
-#include "http.h"
 #include "reg.h"
-#include "util.h"
+#include "http.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -8,29 +7,36 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Reg::Reg (QWidget *parent, int category)
-    : QMainWindow (parent), type (category)
+Reg::Reg (QMainWindow *parent, type typ) : QMainWindow (parent), typ (typ)
 {
   ui->setupUi (this);
 
-  switch (type)
+  switch (typ)
     {
-    case 1:
+    case type::STUDENT:
       setWindowTitle (tr ("学生注册"));
       ui->label1->setText (tr ("学生注册"));
       ui->label2->setText (tr ("学号"));
       ui->label3->setText (tr ("昵称"));
       ui->label4->setText (tr ("电话"));
       break;
-    case 2:
+    case type::MERCHANT:
       setWindowTitle (tr ("商户注册"));
       ui->label1->setText (tr ("商户注册"));
       ui->label2->setText (tr ("名称"));
       ui->label3->setText (tr ("电话"));
       ui->label4->setText (tr ("位置"));
       break;
+    default:
+      break;
     }
 };
+
+void
+Reg::on_pbtn1_clicked ()
+{
+  close ();
+}
 
 void
 Reg::on_pbtn2_clicked ()
@@ -47,22 +53,25 @@ Reg::on_pbtn2_clicked ()
 
   QString req_url;
   QJsonObject req_data;
+
   req_data["user"] = user;
   req_data["pass"] = pass;
 
-  switch (type)
+  switch (typ)
     {
-    case 1:
+    case type::STUDENT:
       req_data["id"] = str1;
       req_data["name"] = str2;
       req_data["number"] = str3;
       req_url = URL_STUDENT_NEW;
       break;
-    case 2:
+    case type::MERCHANT:
       req_data["name"] = str1;
       req_data["number"] = str2;
       req_data["position"] = str3;
       req_url = URL_MERCHANT_NEW;
+      break;
+    default:
       break;
     }
 
@@ -80,6 +89,7 @@ Reg::req_finished (QNetworkReply *reply)
     }
 
   auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
+
   if (res["code"] != 0)
     {
       QMessageBox::warning (this, tr ("失败"),
@@ -88,5 +98,5 @@ Reg::req_finished (QNetworkReply *reply)
     }
 
   this->close ();
-  QMessageBox::information (nullptr, tr ("提示"), tr ("注册成功"));
+  QMessageBox::information (parentWidget (), tr ("提示"), tr ("注册成功"));
 }

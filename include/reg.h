@@ -2,6 +2,7 @@
 #define REG_H
 
 #include "ui_reg.h"
+#include "util.h"
 
 class Log;
 class QNetworkReply;
@@ -12,25 +13,20 @@ class Reg : public QMainWindow
   friend class Log;
 
 private:
-  int type;
   QString user;
   QString pass;
+  type typ = type::NONE;
   Ui::Reg *ui = new Ui::Reg;
 
 public:
-  Reg (QWidget *parent, int category);
+  Reg (QMainWindow *parent, type typ);
   ~Reg () { delete ui; }
 
 private:
   void req_finished (QNetworkReply *reply);
 
 private slots:
-  void
-  on_pbtn1_clicked ()
-  {
-    close ();
-  }
-
+  void on_pbtn1_clicked ();
   void on_pbtn2_clicked ();
 };
 
