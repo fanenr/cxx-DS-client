@@ -13,6 +13,7 @@
 Log::Log (QMainWindow *parent) : QMainWindow (parent)
 {
   ui->setupUi (this);
+  setAttribute (Qt::WA_DeleteOnClose);
 
   btns = new QButtonGroup (this);
   btns->addButton (ui->rbtn1, 1);

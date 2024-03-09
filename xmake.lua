@@ -1,3 +1,4 @@
+set_policy("build.sanitizer.address", false)
 add_rules("mode.debug", "mode.release")
 set_policy("run.autobuild", true)
 
