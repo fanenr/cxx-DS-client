@@ -5,14 +5,16 @@
 Home::Home (QWidget *parent, type typ) : QMainWindow (parent), typ (typ)
 {
   ui->setupUi (this);
+  setAttribute (Qt::WA_DeleteOnClose);
 
   switch (typ)
     {
     case type::STUDENT:
-      ui->hint3->setText ("学号: ");
+      ui->hint3->setText (tr ("学号: "));
       break;
     case type::MERCHANT:
-      ui->hint3->setText ("位置: ");
+      ui->hint3->setText (tr ("位置: "));
+      ui->pbtn4->setText (tr ("修改菜品"));
       break;
     default:
       break;
@@ -37,13 +39,6 @@ Home::load_info ()
     default:
       break;
     }
-}
-
-void
-Home::closeEvent (QCloseEvent *event)
-{
-  QMainWindow::closeEvent (event);
-  deleteLater ();
 }
 
 void

@@ -22,7 +22,6 @@ public:
 
 public:
   void load_info ();
-  void closeEvent (QCloseEvent *event) override;
 
 private slots:
   void on_pbtn1_clicked ();
