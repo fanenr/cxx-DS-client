@@ -1,9 +1,15 @@
 #include "mod.h"
-#include "qmainwindow.h"
+#include "http.h"
 #include "util.h"
 
-Mod::Mod (QMainWindow *parent, type typ, decltype (old) info)
-    : QMainWindow (parent), typ (typ), old (info)
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMessageBox>
+
+#include <QtNetwork/QNetworkReply>
+
+Mod::Mod (QMainWindow *parent, type typ, decltype (old) old)
+    : QMainWindow (parent), typ (typ), old (old)
 {
   ui->setupUi (this);
 
@@ -57,6 +63,44 @@ Mod::on_pbtn1_clicked ()
 void
 Mod::on_pbtn2_clicked ()
 {
+  QString req_url;
+  QJsonObject req_data;
+
+  req_data["user"] = old["user"];
+  req_data["pass"] = old["pass"];
+
+  switch (typ)
+    {
+    case type::STUDENT:
+      req_url = URL_STUDENT_DEL;
+      break;
+    case type::MERCHANT:
+      req_url = URL_MERCHANT_DEL;
+      break;
+    default:
+      break;
+    }
+
+  Http http;
+  auto reply = http.post (req_url, req_data);
+
+  if (reply->error ())
+    {
+      QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
+      return;
+    }
+
+  auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
+  if (res["code"] != 0)
+    {
+      QMessageBox::warning (this, tr ("失败"),
+                            res["data"].toString (tr ("信息丢失")));
+      return;
+    }
+
+  close ();
+  parentWidget ()->close ();
+  QMessageBox::information (nullptr, tr ("提示"), tr ("注销成功"));
 }
 
 void
