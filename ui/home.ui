@@ -168,7 +168,11 @@
       <item>
        <layout class="QHBoxLayout" name="hlay2">
         <item>
-         <widget class="QListWidget" name="list"/>
+         <widget class="QListWidget" name="list">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QVBoxLayout" name="vlay4">
@@ -195,6 +199,19 @@
             </property>
             <property name="text">
              <string>评价菜品</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbtn5">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>刷新列表</string>
             </property>
            </widget>
           </item>

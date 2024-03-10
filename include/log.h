@@ -21,7 +21,6 @@ public:
 
 private:
   type category ();
-  void req_finished (QNetworkReply *reply);
 
 private slots:
   void on_pbtn1_clicked ();
