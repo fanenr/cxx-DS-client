@@ -102,12 +102,8 @@ Log::on_pbtn2_clicked ()
   req_data["user"] = user;
   req_data["pass"] = pass;
 
-  static Http *http;
-  if (!http)
-    http = new Http (this);
-
-  auto reply = http->post (req_url, req_data);
-
+  Http http;
+  auto reply = http.post (req_url, req_data);
   if (reply->error ())
     {
       QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
@@ -133,6 +129,5 @@ Log::on_pbtn2_clicked ()
   home->load_info ();
   home->load_dish ();
   home->show ();
-
   close ();
 }

@@ -2,6 +2,7 @@
 #include "ditem.h"
 #include "http.h"
 #include "mod.h"
+#include "new.h"
 #include "util.h"
 
 #include <QJsonArray>
@@ -16,17 +17,12 @@ Home::Home (QWidget *parent, type typ) : QMainWindow (parent), typ (typ)
   ui->setupUi (this);
   setAttribute (Qt::WA_DeleteOnClose);
 
-  switch (typ)
+  if (typ == type::MERCHANT)
     {
-    case type::STUDENT:
-      ui->hint3->setText (tr ("学号: "));
-      break;
-    case type::MERCHANT:
+      ui->hint1->setText (tr ("店名: "));
       ui->hint3->setText (tr ("位置: "));
-      ui->pbtn4->setText (tr ("修改菜品"));
-      break;
-    default:
-      break;
+      ui->pbtn5->setText (tr ("新建菜品"));
+      ui->pbtn6->setText (tr ("修改菜品"));
     }
 }
 
@@ -80,7 +76,6 @@ Home::load_dish ()
 
         QVector<Dish> vec;
         auto arr = res["data"].toArray ();
-
         for (auto const &item : arr)
           {
             Dish dish;
@@ -89,12 +84,13 @@ Home::load_dish ()
             dish.id = obj["id"].toInteger ();
             dish.name = obj["name"].toString ();
             dish.user = obj["user"].toString ();
-            dish.price = obj["price"].toInteger ();
+            dish.price = obj["price"].toDouble ();
             dish.position = obj["position"].toString ();
 
             vec.push_back (std::move (dish));
           }
 
+        ui->list->clear ();
         for (auto &dish : vec)
           {
             auto item = new QListWidgetItem (ui->list);
@@ -147,7 +143,36 @@ Home::on_pbtn2_clicked ()
 }
 
 void
+Home::on_pbtn3_clicked ()
+{
+  load_dish ();
+}
+
+void
 Home::on_pbtn5_clicked ()
+{
+  QWidget *page;
+  static New *ndis;
+
+  switch (typ)
+    {
+    case type::MERCHANT:
+      if (!ndis)
+        ndis = new New (this, opt::NEW, info);
+      page = ndis;
+      break;
+    default:
+      break;
+    }
+
+  if (page->isVisible ())
+    return;
+
+  page->show ();
+}
+
+void
+Home::on_pbtn6_clicked ()
 {
   load_dish ();
 }

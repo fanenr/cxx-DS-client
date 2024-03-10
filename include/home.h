@@ -4,9 +4,6 @@
 #include "ui_home.h"
 #include "util.h"
 
-class Log;
-class QNetworkReply;
-
 class Home : public QMainWindow
 {
   Q_OBJECT
@@ -28,9 +25,10 @@ public:
 private slots:
   void on_pbtn1_clicked ();
   void on_pbtn2_clicked ();
-  // void on_pbtn3_clicked ();
+  void on_pbtn3_clicked ();
   // void on_pbtn4_clicked ();
   void on_pbtn5_clicked ();
+  void on_pbtn6_clicked ();
 };
 
 #endif
