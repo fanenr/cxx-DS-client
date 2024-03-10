@@ -58,7 +58,7 @@ Mod::load_old ()
 void
 Mod::on_pbtn1_clicked ()
 {
-  this->close ();
+  close ();
 }
 
 void

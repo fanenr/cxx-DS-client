@@ -103,12 +103,8 @@ Log::on_pbtn2_clicked ()
   req_data["pass"] = pass;
 
   Http http;
-  req_finished (http.post (req_url, req_data));
-}
+  auto reply = http.post (req_url, req_data);
 
-void
-Log::req_finished (QNetworkReply *reply)
-{
   if (reply->error ())
     {
       QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
@@ -116,7 +112,6 @@ Log::req_finished (QNetworkReply *reply)
     }
 
   auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-
   if (res["code"] != 0)
     {
       QMessageBox::warning (this, tr ("失败"),
@@ -133,7 +128,8 @@ Log::req_finished (QNetworkReply *reply)
   auto home = new Home (nullptr, category ());
   home->info = std::move (info);
   home->load_info ();
+  home->load_dish ();
   home->show ();
 
-  this->close ();
+  close ();
 }

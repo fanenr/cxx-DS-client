@@ -22,10 +22,14 @@ public:
 
 public:
   void load_info ();
+  void load_dish ();
 
 private slots:
   void on_pbtn1_clicked ();
   void on_pbtn2_clicked ();
+  // void on_pbtn3_clicked ();
+  // void on_pbtn4_clicked ();
+  void on_pbtn5_clicked ();
 };
 
 #endif

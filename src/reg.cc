@@ -76,12 +76,8 @@ Reg::on_pbtn2_clicked ()
     }
 
   Http http;
-  req_finished (http.post (req_url, req_data));
-}
+  auto reply = http.post (req_url, req_data);
 
-void
-Reg::req_finished (QNetworkReply *reply)
-{
   if (reply->error ())
     {
       QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
@@ -89,7 +85,6 @@ Reg::req_finished (QNetworkReply *reply)
     }
 
   auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-
   if (res["code"] != 0)
     {
       QMessageBox::warning (this, tr ("失败"),
@@ -97,7 +92,6 @@ Reg::req_finished (QNetworkReply *reply)
       return;
     }
 
-  this->close ();
-  QMessageBox::information (parentWidget (), tr ("提示"),
-                            tr ("注册成功，请返回登录"));
+  QMessageBox::information (this, tr ("提示"), tr ("注册成功，请返回登录"));
+  close ();
 }

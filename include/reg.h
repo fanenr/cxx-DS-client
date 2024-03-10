@@ -22,9 +22,6 @@ public:
   Reg (QMainWindow *parent, type typ);
   ~Reg () { delete ui; }
 
-private:
-  void req_finished (QNetworkReply *reply);
-
 private slots:
   void on_pbtn1_clicked ();
   void on_pbtn2_clicked ();
