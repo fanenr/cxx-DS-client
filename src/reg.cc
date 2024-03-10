@@ -75,11 +75,8 @@ Reg::on_pbtn2_clicked ()
       break;
     }
 
-  static Http *http;
-  if (!http)
-    http = new Http (parent ());
-
-  auto reply = http->post (req_url, req_data);
+  Http http;
+  auto reply = http.post (req_url, req_data);
 
   if (reply->error ())
     {

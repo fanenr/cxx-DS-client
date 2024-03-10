@@ -6,7 +6,7 @@
 struct Dish
 {
   quint32 id;
-  float price;
+  double price;
   QString user;
   QString name;
   QString position;

@@ -185,7 +185,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>查看评价</string>
+             <string>刷新列表</string>
             </property>
            </widget>
           </item>
@@ -198,7 +198,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>评价菜品</string>
+             <string>查看评价</string>
             </property>
            </widget>
           </item>
@@ -211,7 +211,20 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>刷新列表</string>
+             <string>评价菜品</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbtn6">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>修改评价</string>
             </property>
            </widget>
           </item>
