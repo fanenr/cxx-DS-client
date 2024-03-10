@@ -5,6 +5,7 @@
 #include "util.h"
 
 class Log;
+class QNetworkReply;
 
 class Home : public QMainWindow
 {

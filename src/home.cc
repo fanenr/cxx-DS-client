@@ -1,7 +1,15 @@
 #include "home.h"
 #include "ditem.h"
+#include "http.h"
 #include "mod.h"
 #include "util.h"
+
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMessageBox>
+
+#include <QtNetwork/QNetworkReply>
 
 Home::Home (QWidget *parent, type typ) : QMainWindow (parent), typ (typ)
 {
@@ -45,32 +53,61 @@ Home::load_info ()
 void
 Home::load_dish ()
 {
-  Dish temp = { .id = 0,
-                .price = 10,
-                .name = "测试",
-                .owner = "包子铺",
-                .position = "南餐厅 1 楼 1 号" };
+  static bool load_dish_sent;
+  static QNetworkAccessManager *nam;
+  if (load_dish_sent)
+    return;
 
-  QVector<Dish> vec;
-  for (auto i = 0; i < 16; i++)
-    {
-      temp.price = i + 1;
-      vec.push_back (temp);
-    }
+  load_dish_sent = true;
+  nam = Http::post (
+      URL_MENU_LIST, {},
+      [this] (QNetworkReply *reply) {
+        load_dish_sent = false;
 
-  auto list = ui->list;
-  list->clear ();
+        if (reply->error ())
+          {
+            QMessageBox::warning (this, tr ("失败"), tr ("无法拉取菜品菜单"));
+            return;
+          }
 
-  for (auto i = 0; i < vec.size (); i++)
-    {
-      auto item = new QListWidgetItem (list);
-      item->setData (Qt::UserRole, QVariant::fromValue (vec[i]));
+        auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
+        if (res["code"] != 0)
+          {
+            QMessageBox::warning (this, tr ("失败"),
+                                  res["data"].toString (tr ("信息丢失")));
+            return;
+          }
 
-      auto widget = new Ditem (list, vec[i]);
-      item->setSizeHint (widget->sizeHint ());
+        QVector<Dish> vec;
+        auto arr = res["data"].toArray ();
 
-      list->setItemWidget (item, widget);
-    }
+        for (auto const &item : arr)
+          {
+            Dish dish;
+            auto const &obj = item.toObject ();
+
+            dish.id = obj["id"].toInteger ();
+            dish.name = obj["name"].toString ();
+            dish.user = obj["user"].toString ();
+            dish.price = obj["price"].toInteger ();
+            dish.position = obj["position"].toString ();
+
+            vec.push_back (std::move (dish));
+          }
+
+        for (auto &dish : vec)
+          {
+            auto item = new QListWidgetItem (ui->list);
+            auto widget = new Ditem (ui->list, dish);
+
+            item->setSizeHint (widget->sizeHint ());
+            item->setData (Qt::UserRole,
+                           QVariant::fromValue (std::move (dish)));
+
+            ui->list->setItemWidget (item, widget);
+          }
+      },
+      nam);
 }
 
 void

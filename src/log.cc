@@ -102,8 +102,11 @@ Log::on_pbtn2_clicked ()
   req_data["user"] = user;
   req_data["pass"] = pass;
 
-  Http http;
-  auto reply = http.post (req_url, req_data);
+  static Http *http;
+  if (!http)
+    http = new Http (this);
+
+  auto reply = http->post (req_url, req_data);
 
   if (reply->error ())
     {

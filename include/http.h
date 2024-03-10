@@ -1,7 +1,9 @@
 #ifndef HTTP_H
 #define HTTP_H
 
-#include <QMap>
+#include <QEventLoop>
+#include <QJsonDocument>
+
 #include <QtNetwork/QNetworkAccessManager>
 
 class Http : QObject
@@ -9,28 +11,77 @@ class Http : QObject
   Q_OBJECT
 
 private:
+  QEventLoop loop;
   QNetworkAccessManager nam;
-  static inline QMap<qintptr, QNetworkAccessManager *> map;
 
 public:
-  Http () = default;
+  Http (QObject *parent = nullptr) : QObject (parent)
+  {
+    connect (&nam, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+  }
+
   ~Http () = default;
 
-private:
-  static QNetworkRequest json_req (QString const &url);
+public:
+  static QNetworkRequest
+  json_req (QString const &url)
+  {
+    QNetworkRequest req;
+    req.setUrl (QUrl (url));
+    req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
+    return req;
+  }
+
+  QNetworkReply *
+  post (QString const &url, QJsonObject const &data)
+  {
+    auto const &req = json_req (url);
+
+    QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
+    auto reply = nam.post (req, req_data);
+
+    loop.exec ();
+    return reply;
+  }
 
 public:
-  QNetworkReply *post (QString const &url, QJsonObject const &data);
+  template <typename Slot>
+  static QNetworkAccessManager *
+  post (QString const &url, QJsonObject const &data, QObject const *recv,
+        Slot &&slot, QNetworkAccessManager *nam = nullptr)
+  {
+    auto const &req = json_req (url);
 
-public:
-  template <typename Recv, typename Slot>
-  static void post (QString const &url, QJsonObject const &data, Recv *recv,
-                    Slot &&slot);
+    if (!nam)
+      {
+        nam = new QNetworkAccessManager;
+        connect (nam, &QNetworkAccessManager::finished, recv,
+                 std::forward<Slot> (slot));
+      }
+
+    QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
+    auto reply = nam->post (req, req_data);
+    return nam;
+  }
 
   template <typename Slot>
-  static void post (QString const &url, QJsonObject const &data, Slot &&slot);
+  static QNetworkAccessManager *
+  post (QString const &url, QJsonObject const &data, Slot &&slot,
+        QNetworkAccessManager *nam = nullptr)
+  {
+    auto const &req = json_req (url);
 
-  static void finished (QNetworkReply *reply);
+    if (!nam)
+      {
+        nam = new QNetworkAccessManager;
+        connect (nam, &QNetworkAccessManager::finished,
+                 std::forward<Slot> (slot));
+      }
+
+    QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
+    auto reply = nam->post (req, req_data);
+    return nam;
+  }
 };
 
 #endif
