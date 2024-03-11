@@ -45,6 +45,11 @@
           </item>
           <item row="1" column="3">
            <widget class="QLabel" name="hint4">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
              <string>电话: </string>
             </property>
@@ -59,6 +64,11 @@
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="hint1">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
              <string>昵称: </string>
             </property>
@@ -66,6 +76,11 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="hint2">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
              <string>帐号: </string>
             </property>
@@ -73,6 +88,11 @@
           </item>
           <item row="0" column="3">
            <widget class="QLabel" name="hint3">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
              <string>学号: </string>
             </property>

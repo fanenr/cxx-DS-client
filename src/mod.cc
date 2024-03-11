@@ -1,7 +1,6 @@
 #include "mod.h"
 #include "home.h"
 #include "http.h"
-#include "qmainwindow.h"
 #include "util.h"
 
 #include <QJsonDocument>
@@ -16,7 +15,7 @@ Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
 
   ui->label2->setText (tr ("新密码"));
   ui->label4->setText (tr ("新电话"));
-  
+
   switch (prnt->typ)
     {
     case type::STUDENT:
@@ -75,19 +74,8 @@ Mod::on_pbtn2_clicked ()
 
   Http http;
   auto reply = http.post (req_url, req_data);
-  if (reply->error ())
-    {
-      QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
-      return;
-    }
-
-  auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-  if (res["code"] != 0)
-    {
-      QMessageBox::warning (this, tr ("失败"),
-                            res["data"].toString (tr ("信息丢失")));
-      return;
-    }
+  if (!Http::get_data (reply, this).has_value ())
+    return;
 
   QMessageBox::information (this, tr ("提示"), tr ("注销成功"));
   prnt->close ();
@@ -135,19 +123,8 @@ Mod::on_pbtn3_clicked ()
 
   Http http;
   auto reply = http.post (req_url, req_data);
-  if (reply->error ())
-    {
-      QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
-      return;
-    }
-
-  auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-  if (res["code"] != 0)
-    {
-      QMessageBox::warning (this, tr ("失败"),
-                            res["data"].toString (tr ("信息丢失")));
-      return;
-    }
+  if (!Http::get_data (reply, this).has_value ())
+    return;
 
   info["pass"] = std::move (npass);
   info["name"] = std::move (nname);

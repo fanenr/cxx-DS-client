@@ -1,10 +1,15 @@
 #ifndef HTTP_H
 #define HTTP_H
 
+#include <optional>
+
 #include <QEventLoop>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QMessageBox>
 
 #include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 
 class Http : QObject
 {
@@ -81,6 +86,24 @@ public:
     QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
     auto reply = nam->post (req, req_data);
     return nam;
+  }
+
+  static std::optional<QJsonObject>
+  get_data (QNetworkReply *reply, QWidget *ctx)
+  {
+    if (reply->error ())
+      {
+        QMessageBox::warning (ctx, tr ("失败"), tr ("无法发送网络请求"));
+        return std::nullopt;
+      }
+    auto obj = QJsonDocument::fromJson (reply->readAll ()).object ();
+    if (obj["code"] != 0)
+      {
+        QMessageBox::warning (ctx, tr ("失败"),
+                              obj["data"].toString (tr ("信息丢失")));
+        return std::nullopt;
+      }
+    return obj;
   }
 };
 
