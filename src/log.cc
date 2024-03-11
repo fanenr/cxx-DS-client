@@ -100,28 +100,18 @@ Log::on_pbtn2_clicked ()
 
   Http http;
   auto reply = http.post (req_url, req_data);
-  if (reply->error ())
-    {
-      QMessageBox::warning (this, tr ("失败"), tr ("无法发送网络请求"));
-      return;
-    }
 
-  auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-  if (res["code"] != 0)
-    {
-      QMessageBox::warning (this, tr ("失败"),
-                            res["data"].toString (tr ("信息丢失")));
-      return;
-    }
+  auto res = Http::get_data (reply, this);
+  if (!res.has_value ())
+    return;
 
   QMap<QString, QString> info;
-  auto map = res["data"].toObject ().toVariantMap ();
-
+  auto map = res.value ()["data"].toObject ().toVariantMap ();
   for (auto it = map.cbegin (); it != map.cend (); it++)
     info.insert (it.key (), it.value ().toString ());
 
-  prnt->info = std::move (info);
   prnt->typ = typ;
+  prnt->info = std::move (info);
 
   prnt->load_info ();
   prnt->load_dish ();

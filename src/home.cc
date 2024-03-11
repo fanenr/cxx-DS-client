@@ -71,22 +71,12 @@ Home::load_dish ()
       [this] (QNetworkReply *reply) {
         load_dish_sent = false;
 
-        if (reply->error ())
-          {
-            QMessageBox::warning (this, tr ("失败"), tr ("无法拉取菜品菜单"));
-            return;
-          }
-
-        auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-        if (res["code"] != 0)
-          {
-            QMessageBox::warning (this, tr ("失败"),
-                                  res["data"].toString (tr ("信息丢失")));
-            return;
-          }
+        auto res = Http::get_data (reply, this);
+        if (!res.has_value ())
+          return;
 
         QVector<Dish> vec;
-        auto arr = res["data"].toArray ();
+        auto arr = res.value ()["data"].toArray ();
         for (auto const &item : arr)
           {
             auto const &obj = item.toObject ();
@@ -97,12 +87,12 @@ Home::load_dish ()
                              .position = obj["position"].toString () });
           }
 
+        ui->list->clear ();
         auto list = ui->list;
-        list->clear ();
         for (auto &dish : vec)
           {
-            auto item = new QListWidgetItem (list);
             auto widget = new Ditem (list, dish);
+            auto item = new QListWidgetItem (list);
 
             item->setSizeHint (widget->sizeHint ());
             item->setData (Qt::UserRole,

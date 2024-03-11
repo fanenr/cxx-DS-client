@@ -75,19 +75,8 @@ New::on_pbtn3_clicked ()
 
   Http http;
   auto reply = http.post (req_url, req_data);
-  if (reply->error ())
-    {
-      QMessageBox::warning (this, tr ("失败"), tr ("无法提交网络请求"));
-      return;
-    }
-
-  auto res = QJsonDocument::fromJson (reply->readAll ()).object ();
-  if (res["code"] != 0)
-    {
-      QMessageBox::warning (this, tr ("失败"),
-                            res["data"].toString (tr ("信息丢失")));
-      return;
-    }
+  if (!Http::get_data (reply, this).has_value ())
+    return;
 
   QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
   prnt->load_dish ();
