@@ -4,19 +4,22 @@
 #include "ui_log.h"
 #include "util.h"
 
-class Reg;
-class QNetworkReply;
+#include <QButtonGroup>
+
+class Home;
 
 class Log : public QMainWindow
 {
   Q_OBJECT
+  friend class Reg;
 
 private:
+  Home *prnt;
+  QButtonGroup btns;
   Ui::Log *ui = new Ui::Log;
-  QButtonGroup *btns = nullptr;
 
 public:
-  explicit Log (QMainWindow *parent);
+  explicit Log (Home *parent);
   ~Log () { delete ui; }
 
 private:

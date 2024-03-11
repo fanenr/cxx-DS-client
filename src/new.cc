@@ -8,18 +8,17 @@
 
 #include <QtNetwork/QNetworkReply>
 
-New::New (QMainWindow *parent, opt op, decltype (info) info)
-    : QMainWindow (parent), op (op), info (info)
+New::New (Home *parent, oper op) : QMainWindow (parent), prnt (parent), op (op)
 {
   ui->setupUi (this);
 
   switch (op)
     {
-    case opt::NEW:
+    case oper::NEW:
       ui->pbtn2->hide ();
       ui->hlay2->removeItem (ui->hsp2);
       break;
-    case opt::MOD:
+    case oper::MOD:
       setWindowTitle (tr ("修改菜品"));
       ui->pbtn3->setText (tr ("修改"));
       ui->label1->setText (tr ("修改菜品"));
@@ -33,6 +32,11 @@ void
 New::on_pbtn1_clicked ()
 {
   close ();
+}
+
+void
+New::on_pbtn2_clicked ()
+{
 }
 
 void
@@ -51,17 +55,18 @@ New::on_pbtn3_clicked ()
 
   QJsonObject req_data;
   req_data["name"] = name;
-  req_data["price"] = price;
-  req_data["user"] = info["user"];
-  req_data["pass"] = info["pass"];
+  req_data["user"] = prnt->info["user"];
+  req_data["pass"] = prnt->info["pass"];
 
   QString req_url;
   switch (op)
     {
-    case opt::NEW:
+    case oper::NEW:
+      req_data["price"] = price;
       req_url = URL_MENU_NEW;
       break;
-    case opt::MOD:
+    case oper::MOD:
+      req_data["nprice"] = price;
       req_url = URL_MENU_MOD;
       break;
     default:
@@ -85,7 +90,6 @@ New::on_pbtn3_clicked ()
     }
 
   QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
-  auto prnt = dynamic_cast<Home *> (parent ());
   prnt->load_dish ();
   close ();
 }

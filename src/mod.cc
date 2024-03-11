@@ -1,6 +1,7 @@
 #include "mod.h"
 #include "home.h"
 #include "http.h"
+#include "qmainwindow.h"
 #include "util.h"
 
 #include <QJsonDocument>
@@ -9,24 +10,22 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Mod::Mod (QMainWindow *parent, type typ, decltype (old) old)
-    : QMainWindow (parent), typ (typ), old (old)
+Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
 {
   ui->setupUi (this);
 
-  switch (typ)
+  ui->label2->setText (tr ("新密码"));
+  ui->label4->setText (tr ("新电话"));
+  
+  switch (prnt->typ)
     {
     case type::STUDENT:
-      ui->label2->setText (tr ("新密码"));
       ui->label3->setText (tr ("新昵称"));
-      ui->label4->setText (tr ("新电话"));
       ui->label5->hide ();
       ui->ledit4->hide ();
       break;
     case type::MERCHANT:
-      ui->label2->setText (tr ("新密码"));
       ui->label3->setText (tr ("新名称"));
-      ui->label4->setText (tr ("新电话"));
       ui->label5->setText (tr ("新位置"));
       break;
     default:
@@ -35,24 +34,16 @@ Mod::Mod (QMainWindow *parent, type typ, decltype (old) old)
 }
 
 void
-Mod::load_old ()
+Mod::showEvent (QShowEvent *event)
 {
-  switch (typ)
-    {
-    case type::STUDENT:
-      ui->ledit1->setText (old["pass"]);
-      ui->ledit2->setText (old["name"]);
-      ui->ledit3->setText (old["number"]);
-      break;
-    case type::MERCHANT:
-      ui->ledit1->setText (old["pass"]);
-      ui->ledit2->setText (old["name"]);
-      ui->ledit3->setText (old["number"]);
-      ui->ledit4->setText (old["position"]);
-      break;
-    default:
-      break;
-    }
+  QMainWindow::showEvent (event);
+
+  ui->ledit1->setText (prnt->info["pass"]);
+  ui->ledit2->setText (prnt->info["name"]);
+  ui->ledit3->setText (prnt->info["number"]);
+
+  if (prnt->typ == type::MERCHANT)
+    ui->ledit4->setText (prnt->info["position"]);
 }
 
 void
@@ -67,10 +58,10 @@ Mod::on_pbtn2_clicked ()
   QString req_url;
   QJsonObject req_data;
 
-  req_data["user"] = old["user"];
-  req_data["pass"] = old["pass"];
+  req_data["user"] = prnt->info["user"];
+  req_data["pass"] = prnt->info["pass"];
 
-  switch (typ)
+  switch (prnt->typ)
     {
     case type::STUDENT:
       req_url = URL_STUDENT_DEL;
@@ -99,7 +90,7 @@ Mod::on_pbtn2_clicked ()
     }
 
   QMessageBox::information (this, tr ("提示"), tr ("注销成功"));
-  parentWidget ()->close ();
+  prnt->close ();
 }
 
 void
@@ -110,6 +101,8 @@ Mod::on_pbtn3_clicked ()
   auto nnumber = ui->ledit3->text ();
   auto nposition = ui->ledit4->text ();
 
+  auto typ = prnt->typ;
+
   if (npass.isEmpty () || nname.isEmpty () || nnumber.isEmpty ()
       || (nposition.isEmpty () && typ == type::MERCHANT))
     {
@@ -119,9 +112,10 @@ Mod::on_pbtn3_clicked ()
 
   QString req_url;
   QJsonObject req_data;
+  auto &info = prnt->info;
 
-  req_data["user"] = old["user"];
-  req_data["pass"] = old["pass"];
+  req_data["user"] = info["user"];
+  req_data["pass"] = info["pass"];
   req_data["npass"] = npass;
   req_data["nname"] = nname;
   req_data["nnumber"] = nnumber;
@@ -155,13 +149,12 @@ Mod::on_pbtn3_clicked ()
       return;
     }
 
-  old["pass"] = std::move (npass);
-  old["name"] = std::move (nname);
-  old["number"] = std::move (nnumber);
+  info["pass"] = std::move (npass);
+  info["name"] = std::move (nname);
+  info["number"] = std::move (nnumber);
   if (typ == type::MERCHANT)
-    old["position"] = std::move (nposition);
+    info["position"] = std::move (nposition);
 
-  auto prnt = dynamic_cast<Home *> (parent ());
   prnt->load_info ();
   close ();
 }

@@ -3,21 +3,19 @@
 #include "http.h"
 #include "reg.h"
 
-#include <QButtonGroup>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
 
 #include <QtNetwork/QNetworkReply>
 
-Log::Log (QMainWindow *parent) : QMainWindow (parent)
+Log::Log (Home *parent) : QMainWindow (parent), prnt (parent)
 {
   ui->setupUi (this);
   setAttribute (Qt::WA_DeleteOnClose);
 
-  btns = new QButtonGroup (this);
-  btns->addButton (ui->rbtn1, 1);
-  btns->addButton (ui->rbtn2, 2);
+  btns.addButton (ui->rbtn1, 1);
+  btns.addButton (ui->rbtn2, 2);
 }
 
 type
@@ -51,12 +49,12 @@ Log::on_pbtn1_clicked ()
     {
     case type::STUDENT:
       if (!sreg)
-        sreg = new Reg (this, type::STUDENT);
+        sreg = new Reg (this);
       reg = sreg;
       break;
     case type::MERCHANT:
       if (!mreg)
-        mreg = new Reg (this, type::MERCHANT);
+        mreg = new Reg (this);
       reg = mreg;
       break;
     default:
@@ -66,8 +64,6 @@ Log::on_pbtn1_clicked ()
   if (reg->isVisible ())
     return;
 
-  reg->user = std::move (user);
-  reg->pass = std::move (pass);
   reg->show ();
 }
 
@@ -124,10 +120,11 @@ Log::on_pbtn2_clicked ()
   for (auto it = map.cbegin (); it != map.cend (); it++)
     info.insert (it.key (), it.value ().toString ());
 
-  auto home = new Home (nullptr, category ());
-  home->info = std::move (info);
-  home->load_info ();
-  home->load_dish ();
-  home->show ();
+  prnt->info = std::move (info);
+  prnt->typ = typ;
+
+  prnt->load_info ();
+  prnt->load_dish ();
+  prnt->show ();
   close ();
 }

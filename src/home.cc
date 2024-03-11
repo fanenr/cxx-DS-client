@@ -1,6 +1,7 @@
 #include "home.h"
 #include "ditem.h"
 #include "http.h"
+#include "log.h"
 #include "mod.h"
 #include "new.h"
 #include "util.h"
@@ -12,10 +13,18 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Home::Home (QWidget *parent, type typ) : QMainWindow (parent), typ (typ)
+Home::Home ()
 {
   ui->setupUi (this);
-  setAttribute (Qt::WA_DeleteOnClose);
+
+  auto log = new Log (this);
+  log->show ();
+}
+
+void
+Home::showEvent (QShowEvent *event)
+{
+  QMainWindow::showEvent (event);
 
   if (typ == type::MERCHANT)
     {
@@ -51,10 +60,12 @@ Home::load_dish ()
 {
   static bool load_dish_sent;
   static QNetworkAccessManager *nam;
+
   if (load_dish_sent)
     return;
 
   load_dish_sent = true;
+
   nam = Http::post (
       URL_MENU_LIST, {},
       [this] (QNetworkReply *reply) {
@@ -78,29 +89,26 @@ Home::load_dish ()
         auto arr = res["data"].toArray ();
         for (auto const &item : arr)
           {
-            Dish dish;
             auto const &obj = item.toObject ();
-
-            dish.id = obj["id"].toInteger ();
-            dish.name = obj["name"].toString ();
-            dish.user = obj["user"].toString ();
-            dish.price = obj["price"].toDouble ();
-            dish.position = obj["position"].toString ();
-
-            vec.push_back (std::move (dish));
+            vec.push_back ({ .id = obj["id"].toInteger (),
+                             .name = obj["name"].toString (),
+                             .user = obj["user"].toString (),
+                             .price = obj["price"].toDouble (),
+                             .position = obj["position"].toString () });
           }
 
-        ui->list->clear ();
+        auto list = ui->list;
+        list->clear ();
         for (auto &dish : vec)
           {
-            auto item = new QListWidgetItem (ui->list);
-            auto widget = new Ditem (ui->list, dish);
+            auto item = new QListWidgetItem (list);
+            auto widget = new Ditem (list, dish);
 
             item->setSizeHint (widget->sizeHint ());
             item->setData (Qt::UserRole,
                            QVariant::fromValue (std::move (dish)));
 
-            ui->list->setItemWidget (item, widget);
+            list->setItemWidget (item, widget);
           }
       },
       nam);
@@ -117,12 +125,12 @@ Home::on_pbtn1_clicked ()
     {
     case type::STUDENT:
       if (!smod)
-        smod = new Mod (this, type::STUDENT, info);
+        smod = new Mod (this);
       mod = smod;
       break;
     case type::MERCHANT:
       if (!mmod)
-        mmod = new Mod (this, type::MERCHANT, info);
+        mmod = new Mod (this);
       mod = mmod;
       break;
     default:
@@ -132,7 +140,6 @@ Home::on_pbtn1_clicked ()
   if (mod->isVisible ())
     return;
 
-  mod->load_old ();
   mod->show ();
 }
 
@@ -152,14 +159,16 @@ void
 Home::on_pbtn5_clicked ()
 {
   QWidget *page;
-  static New *ndis;
+  static New *dish;
 
   switch (typ)
     {
+    case type::STUDENT:
+      break;
     case type::MERCHANT:
-      if (!ndis)
-        ndis = new New (this, opt::NEW, info);
-      page = ndis;
+      if (!dish)
+        dish = new New (this, oper::NEW);
+      page = dish;
       break;
     default:
       break;
@@ -174,5 +183,4 @@ Home::on_pbtn5_clicked ()
 void
 Home::on_pbtn6_clicked ()
 {
-  load_dish ();
 }

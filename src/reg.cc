@@ -1,5 +1,6 @@
 #include "reg.h"
 #include "http.h"
+#include "log.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -7,30 +8,19 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Reg::Reg (QMainWindow *parent, type typ) : QMainWindow (parent), typ (typ)
+Reg::Reg (Log *parent) : QMainWindow (parent), prnt (parent)
 {
   ui->setupUi (this);
 
-  switch (typ)
+  if (prnt->category () == type::MERCHANT)
     {
-    case type::STUDENT:
-      setWindowTitle (tr ("学生注册"));
-      ui->label1->setText (tr ("学生注册"));
-      ui->label2->setText (tr ("学号"));
-      ui->label3->setText (tr ("昵称"));
-      ui->label4->setText (tr ("电话"));
-      break;
-    case type::MERCHANT:
       setWindowTitle (tr ("商户注册"));
       ui->label1->setText (tr ("商户注册"));
       ui->label2->setText (tr ("名称"));
       ui->label3->setText (tr ("电话"));
       ui->label4->setText (tr ("位置"));
-      break;
-    default:
-      break;
     }
-};
+}
 
 void
 Reg::on_pbtn1_clicked ()
@@ -54,10 +44,10 @@ Reg::on_pbtn2_clicked ()
   QString req_url;
   QJsonObject req_data;
 
-  req_data["user"] = user;
-  req_data["pass"] = pass;
+  req_data["user"] = prnt->ui->ledit1->text ();
+  req_data["pass"] = prnt->ui->ledit2->text ();
 
-  switch (typ)
+  switch (prnt->category ())
     {
     case type::STUDENT:
       req_data["id"] = str1;

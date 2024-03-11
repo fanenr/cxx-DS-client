@@ -1,10 +1,9 @@
-#include "log.h"
+#include "home.h"
 
 int
 main (int argc, char *argv[])
 {
   QApplication app (argc, argv);
-  auto log = new Log (nullptr);
-  log->show ();
+  Home home;
   return app.exec ();
 }
