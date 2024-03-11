@@ -23,7 +23,6 @@
 
 enum class type
 {
-  NONE,
   STUDENT,
   MERCHANT,
 };

@@ -4,6 +4,9 @@
 #include "ui_home.h"
 #include "util.h"
 
+class Mod;
+class New;
+
 class Home : public QMainWindow
 {
   Q_OBJECT
@@ -12,7 +15,9 @@ class Home : public QMainWindow
   friend class New;
 
 private:
-  type typ = type::NONE;
+  type typ;
+  Mod *page_mod = nullptr;
+  New *page_new = nullptr;
   Ui::Home *ui = new Ui::Home;
   QMap<QString, QString> info;
 
@@ -20,12 +25,13 @@ public:
   Home ();
   ~Home () { delete ui; }
 
-protected:
-  void showEvent (QShowEvent *event) override;
-
 public:
+  void init_ui ();
   void load_info ();
   void load_dish ();
+
+private:
+  void item_selected (QListWidgetItem *item, QListWidgetItem *prev);
 
 private slots:
   void on_pbtn1_clicked ();

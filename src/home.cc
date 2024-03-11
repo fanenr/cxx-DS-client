@@ -17,15 +17,16 @@ Home::Home ()
 {
   ui->setupUi (this);
 
+  connect (ui->list, &QListWidget::currentItemChanged, this,
+           &Home::item_selected);
+
   auto log = new Log (this);
   log->show ();
 }
 
 void
-Home::showEvent (QShowEvent *event)
+Home::init_ui ()
 {
-  QMainWindow::showEvent (event);
-
   if (typ == type::MERCHANT)
     {
       ui->hint1->setText (tr ("店名: "));
@@ -105,32 +106,23 @@ Home::load_dish ()
 }
 
 void
+Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
+{
+  if (item && typ == type::MERCHANT)
+    {
+      auto const &dish = item->data (Qt::UserRole).value<Dish> ();
+      ui->pbtn6->setEnabled (info["name"] == dish.user);
+    }
+}
+
+void
 Home::on_pbtn1_clicked ()
 {
-  Mod *mod;
-  static Mod *smod;
-  static Mod *mmod;
-
-  switch (typ)
-    {
-    case type::STUDENT:
-      if (!smod)
-        smod = new Mod (this);
-      mod = smod;
-      break;
-    case type::MERCHANT:
-      if (!mmod)
-        mmod = new Mod (this);
-      mod = mmod;
-      break;
-    default:
-      break;
-    }
-
-  if (mod->isVisible ())
+  if (!page_mod)
+    page_mod = new Mod (this);
+  if (page_mod->isVisible ())
     return;
-
-  mod->show ();
+  page_mod->show ();
 }
 
 void
@@ -148,29 +140,37 @@ Home::on_pbtn3_clicked ()
 void
 Home::on_pbtn5_clicked ()
 {
-  QWidget *page;
-  static New *dish;
-
   switch (typ)
     {
     case type::STUDENT:
       break;
     case type::MERCHANT:
-      if (!dish)
-        dish = new New (this, oper::NEW);
-      page = dish;
+      if (!page_new)
+        page_new = new New (this);
+      if (page_new->isVisible ())
+        return;
+      page_new->show (oper::NEW);
       break;
     default:
       break;
     }
-
-  if (page->isVisible ())
-    return;
-
-  page->show ();
 }
 
 void
 Home::on_pbtn6_clicked ()
 {
+  switch (typ)
+    {
+    case type::STUDENT:
+      break;
+    case type::MERCHANT:
+      if (!page_new)
+        page_new = new New (this);
+      if (page_new->isVisible ())
+        return;
+      page_new->show (oper::MOD);
+      break;
+    default:
+      break;
+    }
 }

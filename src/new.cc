@@ -1,4 +1,5 @@
 #include "new.h"
+#include "ditem.h"
 #include "home.h"
 #include "http.h"
 #include "util.h"
@@ -8,17 +9,22 @@
 
 #include <QtNetwork/QNetworkReply>
 
-New::New (Home *parent, oper op) : QMainWindow (parent), prnt (parent), op (op)
+New::New (Home *parent) : QMainWindow (parent), prnt (parent)
 {
   ui->setupUi (this);
+}
 
+void
+New::show (oper op)
+{
+  QMainWindow::show ();
   switch (op)
     {
     case oper::NEW:
-      ui->pbtn2->hide ();
-      ui->hlay2->removeItem (ui->hsp2);
+      ui->pbtn2->setVisible (false);
       break;
     case oper::MOD:
+      ui->pbtn2->setVisible (true);
       setWindowTitle (tr ("修改菜品"));
       ui->pbtn3->setText (tr ("修改"));
       ui->label1->setText (tr ("修改菜品"));
@@ -26,6 +32,17 @@ New::New (Home *parent, oper op) : QMainWindow (parent), prnt (parent), op (op)
     default:
       break;
     }
+
+  if (op == oper::MOD)
+    {
+      auto item = prnt->ui->list->currentItem ();
+      auto const &dish = item->data (Qt::UserRole).value<Dish> ();
+      ui->ledit2->setText (QString::number (dish.price, 'f', 1));
+      ui->ledit1->setText (dish.name);
+      id = dish.id;
+    }
+
+  op = op;
 }
 
 void
@@ -53,19 +70,21 @@ New::on_pbtn3_clicked ()
 
   auto price = price_str.toDouble ();
 
+  QString req_url;
   QJsonObject req_data;
-  req_data["name"] = name;
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
 
-  QString req_url;
   switch (op)
     {
     case oper::NEW:
+      req_data["name"] = name;
       req_data["price"] = price;
       req_url = URL_MENU_NEW;
       break;
     case oper::MOD:
+      req_data["id"] = id;
+      req_data["nname"] = name;
       req_data["nprice"] = price;
       req_url = URL_MENU_MOD;
       break;
