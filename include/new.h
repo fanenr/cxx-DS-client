@@ -3,30 +3,30 @@
 
 #include "ui_new.h"
 
-enum class opt
+enum class oper
 {
-  NONE,
   NEW,
-  MOD
+  MOD,
 };
 
-class New : QMainWindow
+class Home;
+
+class New : public QMainWindow
 {
   Q_OBJECT
-  friend class Home;
 
 private:
-  opt op = opt::NONE;
+  oper op;
+  Home *prnt;
   Ui::New *ui = new Ui::New;
-  QMap<QString, QString> &info;
 
 public:
-  New (QMainWindow *parent, opt op, decltype (info) info);
+  New (Home *parent, oper op);
   ~New () { delete ui; }
 
 private slots:
   void on_pbtn1_clicked ();
-  // void on_pbtn2_clicked ();
+  void on_pbtn2_clicked ();
   void on_pbtn3_clicked ();
 };
 

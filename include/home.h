@@ -8,6 +8,8 @@ class Home : public QMainWindow
 {
   Q_OBJECT
   friend class Log;
+  friend class Mod;
+  friend class New;
 
 private:
   type typ = type::NONE;
@@ -15,8 +17,11 @@ private:
   QMap<QString, QString> info;
 
 public:
-  Home (QWidget *parent, type typ);
+  Home ();
   ~Home () { delete ui; }
+
+protected:
+  void showEvent (QShowEvent *event) override;
 
 public:
   void load_info ();

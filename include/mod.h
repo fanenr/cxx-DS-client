@@ -2,7 +2,6 @@
 #define MOD_H
 
 #include "ui_mod.h"
-#include "util.h"
 
 class Home;
 
@@ -12,16 +11,15 @@ class Mod : public QMainWindow
   friend class Home;
 
 private:
-  type typ = type::NONE;
+  Home *prnt;
   Ui::Mod *ui = new Ui::Mod;
-  QMap<QString, QString> &old;
 
 public:
-  Mod (QMainWindow *parent, type typ, decltype (old) old);
+  Mod (Home *parent);
   ~Mod () { delete ui; }
 
-private:
-  void load_old ();
+protected:
+  void showEvent (QShowEvent *event) override;
 
 private slots:
   void on_pbtn1_clicked ();

@@ -5,10 +5,10 @@
 
 struct Dish
 {
-  quint32 id;
-  double price;
-  QString user;
+  qint64 id;
   QString name;
+  QString user;
+  double price;
   QString position;
 };
 
