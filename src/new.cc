@@ -18,10 +18,14 @@ void
 New::show (oper op)
 {
   QMainWindow::show ();
+  this->op = op;
   switch (op)
     {
     case oper::NEW:
       ui->pbtn2->setVisible (false);
+      setWindowTitle (tr ("新建菜品"));
+      ui->pbtn3->setText (tr ("创建"));
+      ui->label1->setText (tr ("新建菜品"));
       break;
     case oper::MOD:
       ui->pbtn2->setVisible (true);
@@ -36,13 +40,14 @@ New::show (oper op)
   if (op == oper::MOD)
     {
       auto item = prnt->ui->list->currentItem ();
+      if (!item)
+        return;
+
       auto const &dish = item->data (Qt::UserRole).value<Dish> ();
       ui->ledit2->setText (QString::number (dish.price, 'f', 1));
       ui->ledit1->setText (dish.name);
       id = dish.id;
     }
-
-  op = op;
 }
 
 void
