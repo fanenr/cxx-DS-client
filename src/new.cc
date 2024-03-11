@@ -59,6 +59,21 @@ New::on_pbtn1_clicked ()
 void
 New::on_pbtn2_clicked ()
 {
+  QJsonObject req_data;
+  req_data["user"] = prnt->info["user"];
+  req_data["pass"] = prnt->info["pass"];
+  req_data["id"] = id;
+
+  QString req_url = URL_MENU_DEL;
+
+  Http http;
+  auto reply = http.post (req_url, req_data);
+  if (!Http::get_data (reply, this).has_value ())
+    return;
+
+  QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
+  prnt->load_dish ();
+  close ();
 }
 
 void

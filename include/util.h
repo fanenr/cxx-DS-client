@@ -19,7 +19,7 @@
 #define URL_MENU_LIST URL_BASE_MENU "/list"
 #define URL_MENU_NEW URL_BASE_MENU "/new"
 #define URL_MENU_MOD URL_BASE_MENU "/mod"
-#define URL_MENU_EVA URL_BASE_MENU "/eva"
+#define URL_MENU_DEL URL_BASE_MENU "/del"
 
 enum class type
 {
