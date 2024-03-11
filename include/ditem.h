@@ -9,6 +9,7 @@ struct Dish
   QString name;
   QString user;
   double price;
+  QString uname;
   QString position;
 };
 

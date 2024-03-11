@@ -85,6 +85,7 @@ Home::load_dish ()
                              .name = obj["name"].toString (),
                              .user = obj["user"].toString (),
                              .price = obj["price"].toDouble (),
+                             .uname = obj["uname"].toString (),
                              .position = obj["position"].toString () });
           }
 
@@ -111,7 +112,7 @@ Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
   if (item && typ == type::MERCHANT)
     {
       auto const &dish = item->data (Qt::UserRole).value<Dish> ();
-      ui->pbtn6->setEnabled (info["name"] == dish.user);
+      ui->pbtn6->setEnabled (info["user"] == dish.user);
     }
 }
 

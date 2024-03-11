@@ -130,5 +130,6 @@ Mod::on_pbtn3_clicked ()
     info["position"] = std::move (nposition);
 
   prnt->load_info ();
+  prnt->load_dish ();
   close ();
 }
