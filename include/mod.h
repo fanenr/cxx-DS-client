@@ -8,7 +8,6 @@ class Home;
 class Mod : public QMainWindow
 {
   Q_OBJECT
-  friend class Home;
 
 private:
   Home *prnt;
@@ -18,8 +17,8 @@ public:
   Mod (Home *parent);
   ~Mod () { delete ui; }
 
-protected:
-  void showEvent (QShowEvent *event) override;
+public:
+  void show ();
 
 private slots:
   void on_pbtn1_clicked ();

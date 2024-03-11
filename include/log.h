@@ -6,6 +6,7 @@
 
 #include <QButtonGroup>
 
+class Reg;
 class Home;
 
 class Log : public QMainWindow
@@ -16,13 +17,14 @@ class Log : public QMainWindow
 private:
   Home *prnt;
   QButtonGroup btns;
+  Reg *page_reg = nullptr;
   Ui::Log *ui = new Ui::Log;
 
 public:
-  explicit Log (Home *parent);
+  Log (Home *parent);
   ~Log () { delete ui; }
 
-private:
+public:
   type category ();
 
 private slots:

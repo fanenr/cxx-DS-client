@@ -40,31 +40,11 @@ Log::on_pbtn1_clicked ()
       return;
     }
 
-  Reg *reg;
-  static Reg *sreg;
-  static Reg *mreg;
-  auto typ = category ();
-
-  switch (typ)
-    {
-    case type::STUDENT:
-      if (!sreg)
-        sreg = new Reg (this);
-      reg = sreg;
-      break;
-    case type::MERCHANT:
-      if (!mreg)
-        mreg = new Reg (this);
-      reg = mreg;
-      break;
-    default:
-      break;
-    }
-
-  if (reg->isVisible ())
+  if (!page_reg)
+    page_reg = new Reg (this);
+  if (page_reg->isVisible ())
     return;
-
-  reg->show ();
+  page_reg->show ();
 }
 
 void
@@ -115,6 +95,7 @@ Log::on_pbtn2_clicked ()
 
   prnt->load_info ();
   prnt->load_dish ();
+  prnt->init_ui ();
   prnt->show ();
   close ();
 }

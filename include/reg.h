@@ -17,6 +17,9 @@ public:
   Reg (Log *parent);
   ~Reg () { delete ui; }
 
+public:
+  void show ();
+
 private slots:
   void on_pbtn1_clicked ();
   void on_pbtn2_clicked ();

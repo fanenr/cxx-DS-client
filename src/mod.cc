@@ -13,9 +13,6 @@ Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
 {
   ui->setupUi (this);
 
-  ui->label2->setText (tr ("新密码"));
-  ui->label4->setText (tr ("新电话"));
-
   switch (prnt->typ)
     {
     case type::STUDENT:
@@ -25,7 +22,6 @@ Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
       break;
     case type::MERCHANT:
       ui->label3->setText (tr ("新名称"));
-      ui->label5->setText (tr ("新位置"));
       break;
     default:
       break;
@@ -33,9 +29,9 @@ Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
 }
 
 void
-Mod::showEvent (QShowEvent *event)
+Mod::show ()
 {
-  QMainWindow::showEvent (event);
+  QMainWindow::show ();
 
   ui->ledit1->setText (prnt->info["pass"]);
   ui->ledit2->setText (prnt->info["name"]);
@@ -104,6 +100,7 @@ Mod::on_pbtn3_clicked ()
 
   req_data["user"] = info["user"];
   req_data["pass"] = info["pass"];
+
   req_data["npass"] = npass;
   req_data["nname"] = nname;
   req_data["nnumber"] = nnumber;

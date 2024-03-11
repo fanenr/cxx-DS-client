@@ -17,12 +17,16 @@ class New : public QMainWindow
 
 private:
   oper op;
+  qint64 id;
   Home *prnt;
   Ui::New *ui = new Ui::New;
 
 public:
-  New (Home *parent, oper op);
+  New (Home *parent);
   ~New () { delete ui; }
+
+public:
+  void show (oper op);
 
 private slots:
   void on_pbtn1_clicked ();
