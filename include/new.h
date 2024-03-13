@@ -2,12 +2,7 @@
 #define NEW_H
 
 #include "ui_new.h"
-
-enum class oper
-{
-  NEW,
-  MOD,
-};
+#include "util.h"
 
 class Home;
 

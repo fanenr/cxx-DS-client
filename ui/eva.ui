@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Mod</class>
- <widget class="QMainWindow" name="Mod">
+ <class>Eva</class>
+ <widget class="QMainWindow" name="Eva">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>修改信息</string>
+   <string>添加评价</string>
   </property>
   <widget class="QWidget" name="center">
    <layout class="QVBoxLayout" name="vlay">
@@ -51,7 +51,7 @@
          </font>
         </property>
         <property name="text">
-         <string>修改信息</string>
+         <string>添加评价</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -78,45 +78,32 @@
       <property name="horizontalSpacing">
        <number>36</number>
       </property>
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="label2">
         <property name="text">
-         <string>新密码</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="ledit1"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label3">
-        <property name="text">
-         <string>文本</string>
+         <string>评分</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label4">
+       <widget class="QLabel" name="label3">
         <property name="text">
-         <string>新电话</string>
+         <string>评语</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="ledit2"/>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="ledit3"/>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label5">
-        <property name="text">
-         <string>新位置</string>
+       <widget class="QDoubleSpinBox" name="spin">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="ledit4"/>
+      <item row="2" column="1">
+       <widget class="QPlainTextEdit" name="edit"/>
       </item>
      </layout>
     </item>
@@ -183,7 +170,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>注销</string>
+         <string>删除</string>
         </property>
        </widget>
       </item>
@@ -209,7 +196,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>修改</string>
+         <string>评价</string>
         </property>
        </widget>
       </item>
