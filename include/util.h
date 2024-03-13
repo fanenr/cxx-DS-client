@@ -27,4 +27,10 @@ enum class type
   MERCHANT,
 };
 
+enum class oper
+{
+  NEW,
+  MOD,
+};
+
 #endif

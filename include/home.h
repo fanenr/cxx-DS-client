@@ -6,6 +6,7 @@
 
 class Mod;
 class New;
+class Eva;
 
 class Home : public QMainWindow
 {
@@ -18,6 +19,7 @@ private:
   type typ;
   Mod *page_mod = nullptr;
   New *page_new = nullptr;
+  Eva *page_eva = nullptr;
   Ui::Home *ui = new Ui::Home;
   QMap<QString, QString> info;
 
