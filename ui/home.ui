@@ -205,7 +205,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>刷新列表</string>
+             <string>菜品列表</string>
             </property>
            </widget>
           </item>
@@ -231,7 +231,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>评价菜品</string>
+             <string>添加评价</string>
             </property>
            </widget>
           </item>

@@ -7,6 +7,7 @@
 class Mod;
 class New;
 class Eva;
+class Log;
 
 class Home : public QMainWindow
 {
@@ -14,9 +15,11 @@ class Home : public QMainWindow
   friend class Log;
   friend class Mod;
   friend class New;
+  friend class Eva;
 
 private:
   type typ;
+  Log *page_log = nullptr;
   Mod *page_mod = nullptr;
   New *page_new = nullptr;
   Eva *page_eva = nullptr;
