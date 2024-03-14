@@ -1,5 +1,7 @@
 #include "home.h"
 #include "ditem.h"
+#include "eitem.h"
+#include "eva.h"
 #include "http.h"
 #include "log.h"
 #include "mod.h"
@@ -31,7 +33,7 @@ Home::init_ui ()
     {
       ui->hint1->setText (tr ("店名: "));
       ui->hint3->setText (tr ("位置: "));
-      ui->pbtn5->setText (tr ("新建菜品"));
+      ui->pbtn5->setText (tr ("添加菜品"));
       ui->pbtn6->setText (tr ("修改菜品"));
     }
 }
@@ -57,11 +59,69 @@ Home::load_info ()
 }
 
 void
-Home::load_dish ()
+Home::load_eva ()
 {
+  auto item = ui->list->currentItem ();
+  auto id = item->data (Qt::UserRole).value<Dish> ().id;
+
+  sts = stat::EVA;
   ui->list->clear ();
   ui->list->clearSelection ();
+
+  ui->pbtn4->setEnabled (false);
+  ui->pbtn5->setEnabled (false);
+  ui->pbtn6->setEnabled (false);
+
+  static QNetworkAccessManager *nam;
+  QJsonObject req_data;
+  req_data["id"] = id;
+
+  nam = Http::post (
+      URL_EVA_LIST, req_data,
+      [this] (QNetworkReply *reply) {
+        auto res = Http::get_data (reply, this);
+        if (!res.has_value ())
+          return;
+
+        QVector<Eval> vec;
+        auto arr = res.value ()["data"].toArray ();
+        for (auto const &item : arr)
+          {
+            auto const &obj = item.toObject ();
+            vec.push_back ({ .id = obj["id"].toInteger (),
+                             .user = obj["user"].toString (),
+                             .grade = obj["grade"].toDouble (),
+                             .uname = obj["uname"].toString (),
+                             .evaluation = obj["evaluation"].toString () });
+          }
+
+        auto list = ui->list;
+        for (auto &eval : vec)
+          {
+            auto widget = new Eitem (list, eval);
+            auto item = new QListWidgetItem (list);
+
+            item->setSizeHint (widget->sizeHint ());
+            item->setData (Qt::UserRole,
+                           QVariant::fromValue (std::move (eval)));
+
+            list->setItemWidget (item, widget);
+          }
+      },
+      nam);
+}
+
+void
+Home::load_dish ()
+{
+  sts = stat::DISH;
+  ui->list->clear ();
+  ui->list->clearSelection ();
+
   ui->pbtn3->setEnabled (false);
+  ui->pbtn4->setEnabled (false);
+  ui->pbtn5->setEnabled (false);
+  ui->pbtn6->setEnabled (false);
 
   static QNetworkAccessManager *nam;
 
@@ -99,6 +159,9 @@ Home::load_dish ()
 
             list->setItemWidget (item, widget);
           }
+
+        if (typ == type::MERCHANT)
+          ui->pbtn5->setEnabled (true);
       },
       nam);
 }
@@ -106,10 +169,14 @@ Home::load_dish ()
 void
 Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
 {
-  if (item && typ == type::MERCHANT)
+  if (sts == stat::DISH)
     {
-      auto const &dish = item->data (Qt::UserRole).value<Dish> ();
-      ui->pbtn6->setEnabled (info["user"] == dish.user);
+      if (!item)
+        return;
+
+      ui->pbtn4->setEnabled (true);
+      ui->pbtn5->setEnabled (true);
+      ui->pbtn6->setEnabled (true);
     }
 }
 
@@ -136,11 +203,22 @@ Home::on_pbtn3_clicked ()
 }
 
 void
+Home::on_pbtn4_clicked ()
+{
+  load_eva ();
+}
+
+void
 Home::on_pbtn5_clicked ()
 {
   switch (typ)
     {
     case type::STUDENT:
+      if (!page_eva)
+        page_eva = new Eva (this);
+      if (page_eva->isVisible ())
+        return;
+      page_eva->show (oper::NEW);
       break;
     case type::MERCHANT:
       if (!page_new)
@@ -160,6 +238,11 @@ Home::on_pbtn6_clicked ()
   switch (typ)
     {
     case type::STUDENT:
+      if (!page_eva)
+        page_eva = new Eva (this);
+      if (page_eva->isVisible ())
+        return;
+      page_eva->show (oper::MOD);
       break;
     case type::MERCHANT:
       if (!page_new)

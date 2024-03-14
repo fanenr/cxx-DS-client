@@ -25,7 +25,7 @@
         </font>
        </property>
        <property name="text">
-        <string>菜品名称</string>
+        <string>评价人</string>
        </property>
       </widget>
      </item>
@@ -67,6 +67,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

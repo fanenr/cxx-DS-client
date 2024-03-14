@@ -44,8 +44,6 @@ New::show (oper op)
         return;
 
       auto const &dish = item->data (Qt::UserRole).value<Dish> ();
-      ui->ledit2->setText (QString::number (dish.price, 'f', 1));
-      ui->ledit1->setText (dish.name);
       id = dish.id;
     }
 }

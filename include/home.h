@@ -19,6 +19,7 @@ class Home : public QMainWindow
 
 private:
   type typ;
+  stat sts;
   Log *page_log = nullptr;
   Mod *page_mod = nullptr;
   New *page_new = nullptr;
@@ -32,6 +33,7 @@ public:
 
 public:
   void init_ui ();
+  void load_eva ();
   void load_info ();
   void load_dish ();
 
@@ -42,7 +44,7 @@ private slots:
   void on_pbtn1_clicked ();
   void on_pbtn2_clicked ();
   void on_pbtn3_clicked ();
-  // void on_pbtn4_clicked ();
+  void on_pbtn4_clicked ();
   void on_pbtn5_clicked ();
   void on_pbtn6_clicked ();
 };
