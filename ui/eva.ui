@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>添加评价</string>
+   <string>新增评价</string>
   </property>
   <widget class="QWidget" name="center">
    <layout class="QVBoxLayout" name="vlay">
@@ -51,7 +51,7 @@
          </font>
         </property>
         <property name="text">
-         <string>添加评价</string>
+         <string>新增评价</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -196,7 +196,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>评价</string>
+         <string>确定</string>
         </property>
        </widget>
       </item>

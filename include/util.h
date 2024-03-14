@@ -5,6 +5,7 @@
 #define URL_BASE_STUDENT URL_BASE "/student"
 #define URL_BASE_MERCHANT URL_BASE "/merchant"
 #define URL_BASE_MENU URL_BASE "/menu"
+#define URL_BASE_EVA URL_BASE "/eva"
 
 #define URL_STUDENT_NEW URL_BASE_STUDENT "/new"
 #define URL_STUDENT_LOG URL_BASE_STUDENT "/log"
@@ -21,6 +22,11 @@
 #define URL_MENU_MOD URL_BASE_MENU "/mod"
 #define URL_MENU_DEL URL_BASE_MENU "/del"
 
+#define URL_EVA_LIST URL_BASE_EVA "/list"
+#define URL_EVA_NEW URL_BASE_EVA "/new"
+#define URL_EVA_MOD URL_BASE_EVA "/mod"
+#define URL_EVA_DEL URL_BASE_EVA "/del"
+
 enum class type
 {
   STUDENT,
@@ -31,6 +37,12 @@ enum class oper
 {
   NEW,
   MOD,
+};
+
+enum class stat
+{
+  DISH,
+  EVA,
 };
 
 #endif

@@ -24,9 +24,9 @@ public:
   void show (oper op);
 
 private slots:
-  // void on_pbtn1_clicked ();
+  void on_pbtn1_clicked ();
   // void on_pbtn2_clicked ();
-  // void on_pbtn3_clicked ();
+  void on_pbtn3_clicked ();
 };
 
 #endif

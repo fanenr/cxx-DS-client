@@ -218,7 +218,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>查看评价</string>
+             <string>评价列表</string>
             </property>
            </widget>
           </item>
