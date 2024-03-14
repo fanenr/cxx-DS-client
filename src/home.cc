@@ -20,8 +20,8 @@ Home::Home ()
   connect (ui->list, &QListWidget::currentItemChanged, this,
            &Home::item_selected);
 
-  auto log = new Log (this);
-  log->show ();
+  page_log = new Log (this);
+  page_log->show ();
 }
 
 void
@@ -59,18 +59,16 @@ Home::load_info ()
 void
 Home::load_dish ()
 {
-  static bool load_dish_sent;
+  ui->list->clear ();
+  ui->list->clearSelection ();
+  ui->pbtn3->setEnabled (false);
+
   static QNetworkAccessManager *nam;
-
-  if (load_dish_sent)
-    return;
-
-  load_dish_sent = true;
 
   nam = Http::post (
       URL_MENU_LIST, {},
       [this] (QNetworkReply *reply) {
-        load_dish_sent = false;
+        ui->pbtn3->setEnabled (true);
 
         auto res = Http::get_data (reply, this);
         if (!res.has_value ())
@@ -89,7 +87,6 @@ Home::load_dish ()
                              .position = obj["position"].toString () });
           }
 
-        ui->list->clear ();
         auto list = ui->list;
         for (auto &dish : vec)
           {
