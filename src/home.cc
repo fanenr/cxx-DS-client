@@ -12,6 +12,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
+#include <algorithm>
 
 #include <QtNetwork/QNetworkReply>
 
@@ -19,6 +20,7 @@ Home::Home ()
 {
   ui->setupUi (this);
 
+  connect (ui->sort, &QCheckBox::toggled, this, &Home::sort_changed);
   connect (ui->list, &QListWidget::currentItemChanged, this,
            &Home::item_selected);
 
@@ -164,6 +166,73 @@ Home::load_dish ()
           ui->pbtn5->setEnabled (true);
       },
       nam);
+}
+
+void
+Home::sort_changed (bool checked)
+{
+  static bool is_sorting;
+  if (is_sorting)
+    return;
+
+  is_sorting = true;
+  auto ui_list = ui->list;
+  QList<QListWidgetItem *> list;
+  auto size = ui_list->count ();
+
+  if (size < 2)
+    {
+      is_sorting = false;
+      return;
+    }
+
+  for (; size > 0;)
+    list.push_back (ui_list->takeItem (--size));
+
+  std::sort (list.begin (), list.end (),
+             [this, checked] (QListWidgetItem *a, QListWidgetItem *b) {
+               double num1, num2;
+
+               if (sts == stat::DISH)
+                 {
+                   auto const &dish1 = a->data (Qt::UserRole).value<Dish> ();
+                   auto const &dish2 = b->data (Qt::UserRole).value<Dish> ();
+                   num1 = dish1.price;
+                   num2 = dish2.price;
+                 }
+
+               if (sts == stat::EVA)
+                 {
+                   auto const &eval1 = a->data (Qt::UserRole).value<Eval> ();
+                   auto const &eval2 = b->data (Qt::UserRole).value<Eval> ();
+                   num1 = eval1.grade;
+                   num2 = eval2.grade;
+                 }
+
+               return checked ? num1 > num2 : num1 < num2;
+             });
+
+  if (sts == stat::DISH)
+    for (auto item : list)
+      {
+        auto const &dish = item->data (Qt::UserRole).value<Dish> ();
+        auto widget = new Ditem (this, dish);
+
+        ui_list->addItem (item);
+        ui_list->setItemWidget (item, widget);
+      }
+
+  if (sts == stat::EVA)
+    for (auto item : list)
+      {
+        auto const &eval = item->data (Qt::UserRole).value<Eval> ();
+        auto widget = new Eitem (this, eval);
+
+        ui_list->addItem (item);
+        ui_list->setItemWidget (item, widget);
+      }
+
+  is_sorting = false;
 }
 
 void

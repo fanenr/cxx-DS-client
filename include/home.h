@@ -38,6 +38,7 @@ public:
   void load_dish ();
 
 private:
+  void sort_changed (bool checked);
   void item_selected (QListWidgetItem *item, QListWidgetItem *prev);
 
 private slots:
