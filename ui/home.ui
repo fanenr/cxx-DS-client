@@ -197,6 +197,23 @@
         <item>
          <layout class="QVBoxLayout" name="vlay4">
           <item>
+           <layout class="QHBoxLayout" name="haly3">
+            <item>
+             <widget class="QCheckBox" name="sort">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>降序</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <widget class="QPushButton" name="pbtn3">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
