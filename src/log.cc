@@ -67,10 +67,9 @@ Log::on_pbtn2_clicked ()
     case type::STUDENT:
       req_url = URL_STUDENT_LOG;
       break;
+
     case type::MERCHANT:
       req_url = URL_MERCHANT_LOG;
-      break;
-    default:
       break;
     }
 

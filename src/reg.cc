@@ -26,6 +26,7 @@ Reg::show ()
       ui->label3->setText (tr ("昵称"));
       ui->label4->setText (tr ("电话"));
       break;
+
     case type::MERCHANT:
       setWindowTitle (tr ("商户注册"));
       ui->label1->setText (tr ("商户注册"));
@@ -33,6 +34,7 @@ Reg::show ()
       ui->label3->setText (tr ("电话"));
       ui->label4->setText (tr ("位置"));
       break;
+
     default:
       break;
     }
@@ -71,13 +73,12 @@ Reg::on_pbtn2_clicked ()
       req_data["number"] = str3;
       req_url = URL_STUDENT_NEW;
       break;
+
     case type::MERCHANT:
       req_data["name"] = str1;
       req_data["number"] = str2;
       req_data["position"] = str3;
       req_url = URL_MERCHANT_NEW;
-      break;
-    default:
       break;
     }
 

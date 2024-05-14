@@ -12,7 +12,7 @@ class New : public QMainWindow
 
 private:
   oper op;
-  qint64 id;
+  int64_t id;
   Home *prnt;
   Ui::New *ui = new Ui::New;
 

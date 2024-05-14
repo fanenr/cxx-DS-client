@@ -31,20 +31,17 @@ public:
   static QNetworkRequest
   json_req (QString const &url)
   {
-    QNetworkRequest req;
-    req.setUrl (QUrl (url));
-    req.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
-    return req;
+    auto result = QNetworkRequest (QUrl (url));
+    result.setHeader (QNetworkRequest::ContentTypeHeader, "application/json");
+    return result;
   }
 
   QNetworkReply *
   post (QString const &url, QJsonObject const &data)
   {
-    auto const &req = json_req (url);
-
-    QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
-    auto reply = nam.post (req, req_data);
-
+    auto req = json_req (url);
+    auto dat = QJsonDocument (data).toJson ();
+    auto reply = nam.post (req, dat);
     loop.exec ();
     return reply;
   }
@@ -55,8 +52,6 @@ public:
   post (QString const &url, QJsonObject const &data, QObject const *recv,
         Slot &&slot, QNetworkAccessManager *nam = nullptr)
   {
-    auto const &req = json_req (url);
-
     if (!nam)
       {
         nam = new QNetworkAccessManager;
@@ -64,8 +59,9 @@ public:
                  std::forward<Slot> (slot));
       }
 
-    QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
-    auto reply = nam->post (req, req_data);
+    auto req = json_req (url);
+    auto dat = QJsonDocument (data).toJson ();
+    auto reply = nam->post (req, dat);
     return nam;
   }
 
@@ -74,8 +70,6 @@ public:
   post (QString const &url, QJsonObject const &data, Slot &&slot,
         QNetworkAccessManager *nam = nullptr)
   {
-    auto const &req = json_req (url);
-
     if (!nam)
       {
         nam = new QNetworkAccessManager;
@@ -83,8 +77,9 @@ public:
                  std::forward<Slot> (slot));
       }
 
-    QByteArray req_data = QJsonDocument (data).toJson (QJsonDocument::Compact);
-    auto reply = nam->post (req, req_data);
+    auto req = json_req (url);
+    auto dat = QJsonDocument (data).toJson ();
+    auto reply = nam->post (req, dat);
     return nam;
   }
 
@@ -96,6 +91,7 @@ public:
         QMessageBox::warning (ctx, tr ("失败"), tr ("无法发送网络请求"));
         return std::nullopt;
       }
+
     auto obj = QJsonDocument::fromJson (reply->readAll ()).object ();
     if (obj["code"] != 0)
       {
@@ -103,6 +99,7 @@ public:
                               obj["data"].toString (tr ("信息丢失")));
         return std::nullopt;
       }
+
     return obj;
   }
 };

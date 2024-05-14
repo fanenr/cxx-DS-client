@@ -20,10 +20,9 @@ Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
       ui->label5->hide ();
       ui->ledit4->hide ();
       break;
+
     case type::MERCHANT:
       ui->label3->setText (tr ("新名称"));
-      break;
-    default:
       break;
     }
 }
@@ -61,10 +60,9 @@ Mod::on_pbtn2_clicked ()
     case type::STUDENT:
       req_url = URL_STUDENT_DEL;
       break;
+
     case type::MERCHANT:
       req_url = URL_MERCHANT_DEL;
-      break;
-    default:
       break;
     }
 
@@ -110,11 +108,10 @@ Mod::on_pbtn3_clicked ()
     case type::STUDENT:
       req_url = URL_STUDENT_MOD;
       break;
+
     case type::MERCHANT:
       req_url = URL_MERCHANT_MOD;
       req_data["nposition"] = nposition;
-      break;
-    default:
       break;
     }
 

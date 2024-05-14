@@ -12,7 +12,7 @@ class Eva : public QMainWindow
 
 private:
   oper op;
-  qint64 id;
+  int64_t id;
   Home *prnt;
   Ui::Eva *ui = new Ui::Eva;
 

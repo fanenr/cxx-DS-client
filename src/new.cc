@@ -27,13 +27,12 @@ New::show (oper op)
       ui->pbtn3->setText (tr ("创建"));
       ui->label1->setText (tr ("新建菜品"));
       break;
+
     case oper::MOD:
       ui->pbtn2->setVisible (true);
       setWindowTitle (tr ("修改菜品"));
       ui->pbtn3->setText (tr ("修改"));
       ui->label1->setText (tr ("修改菜品"));
-      break;
-    default:
       break;
     }
 
@@ -60,7 +59,7 @@ New::on_pbtn2_clicked ()
   QJsonObject req_data;
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
-  req_data["id"] = id;
+  req_data["id"] = qint64 (id);
 
   QString req_url = URL_MENU_DEL;
 
@@ -100,13 +99,12 @@ New::on_pbtn3_clicked ()
       req_data["price"] = price;
       req_url = URL_MENU_NEW;
       break;
+
     case oper::MOD:
-      req_data["id"] = id;
+      req_data["id"] = qint64 (id);
       req_data["nname"] = name;
       req_data["nprice"] = price;
       req_url = URL_MENU_MOD;
-      break;
-    default:
       break;
     }
 
