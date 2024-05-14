@@ -21,12 +21,11 @@ Eva::show (oper op)
       setWindowTitle (tr ("添加评价"));
       ui->label1->setText (tr ("添加评价"));
       break;
+
     case oper::MOD:
       ui->pbtn2->setVisible (true);
       setWindowTitle (tr ("修改评价"));
       ui->label1->setText (tr ("修改评价"));
-      break;
-    default:
       break;
     }
 
@@ -50,7 +49,7 @@ Eva::on_pbtn2_clicked ()
   QJsonObject req_data;
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
-  req_data["id"] = id;
+  req_data["id"] = qint64 (id);
 
   QString req_url = URL_EVA_DEL;
 
@@ -78,7 +77,7 @@ Eva::on_pbtn3_clicked ()
 
   QString req_url;
   QJsonObject req_data;
-  req_data["id"] = this->id;
+  req_data["id"] = qint64 (id);
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
 
@@ -89,12 +88,11 @@ Eva::on_pbtn3_clicked ()
       req_data["evaluation"] = evaluation;
       req_url = URL_EVA_NEW;
       break;
+
     case oper::MOD:
       req_data["ngrade"] = grade;
       req_data["nevaluation"] = evaluation;
       req_url = URL_EVA_MOD;
-      break;
-    default:
       break;
     }
 

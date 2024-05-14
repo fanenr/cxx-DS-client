@@ -5,9 +5,9 @@
 
 struct Eval
 {
-  qint64 id;
-  QString user;
+  int64_t id;
   double grade;
+  QString user;
   QString uname;
   QString evaluation;
 };

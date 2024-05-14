@@ -52,10 +52,9 @@ Home::load_info ()
     case type::STUDENT:
       ui->info3->setText (info["id"]);
       break;
+
     case type::MERCHANT:
       ui->info3->setText (info["position"]);
-      break;
-    default:
       break;
     }
 }
@@ -75,8 +74,9 @@ Home::load_eva ()
   ui->pbtn6->setEnabled (false);
 
   static QNetworkAccessManager *nam;
+
   QJsonObject req_data;
-  req_data["id"] = id;
+  req_data["id"] = qint64 (id);
 
   nam = Http::post (
       URL_EVA_LIST, req_data,
@@ -90,11 +90,13 @@ Home::load_eva ()
         for (auto const &item : arr)
           {
             auto const &obj = item.toObject ();
-            vec.push_back ({ .id = obj["id"].toInteger (),
-                             .user = obj["user"].toString (),
-                             .grade = obj["grade"].toDouble (),
-                             .uname = obj["uname"].toString (),
-                             .evaluation = obj["evaluation"].toString () });
+            vec.push_back ({
+                .id = obj["id"].toInteger (),
+                .grade = obj["grade"].toDouble (),
+                .user = obj["user"].toString (),
+                .uname = obj["uname"].toString (),
+                .evaluation = obj["evaluation"].toString (),
+            });
           }
 
         auto list = ui->list;
@@ -141,12 +143,14 @@ Home::load_dish ()
         for (auto const &item : arr)
           {
             auto const &obj = item.toObject ();
-            vec.push_back ({ .id = obj["id"].toInteger (),
-                             .name = obj["name"].toString (),
-                             .user = obj["user"].toString (),
-                             .price = obj["price"].toDouble (),
-                             .uname = obj["uname"].toString (),
-                             .position = obj["position"].toString () });
+            vec.push_back ({
+                .id = obj["id"].toInteger (),
+                .price = obj["price"].toDouble (),
+                .name = obj["name"].toString (),
+                .user = obj["user"].toString (),
+                .uname = obj["uname"].toString (),
+                .position = obj["position"].toString (),
+            });
           }
 
         auto list = ui->list;
@@ -238,11 +242,8 @@ Home::sort_changed (bool checked)
 void
 Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
 {
-  if (sts == stat::DISH)
+  if (sts == stat::DISH && item)
     {
-      if (!item)
-        return;
-
       ui->pbtn4->setEnabled (true);
       ui->pbtn5->setEnabled (true);
       ui->pbtn6->setEnabled (true);
@@ -289,14 +290,13 @@ Home::on_pbtn5_clicked ()
         return;
       page_eva->show (oper::NEW);
       break;
+
     case type::MERCHANT:
       if (!page_new)
         page_new = new New (this);
       if (page_new->isVisible ())
         return;
       page_new->show (oper::NEW);
-      break;
-    default:
       break;
     }
 }
@@ -313,14 +313,13 @@ Home::on_pbtn6_clicked ()
         return;
       page_eva->show (oper::MOD);
       break;
+
     case type::MERCHANT:
       if (!page_new)
         page_new = new New (this);
       if (page_new->isVisible ())
         return;
       page_new->show (oper::MOD);
-      break;
-    default:
       break;
     }
 }
