@@ -7,7 +7,6 @@
 #include <QButtonGroup>
 
 class Reg;
-class Home;
 
 class Log : public QMainWindow
 {
@@ -15,13 +14,12 @@ class Log : public QMainWindow
   friend class Reg;
 
 private:
-  Home *prnt;
   QButtonGroup btns;
   Reg *page_reg = nullptr;
   Ui::Log *ui = new Ui::Log;
 
 public:
-  Log (Home *parent);
+  Log ();
   ~Log () { delete ui; }
 
 public:

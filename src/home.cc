@@ -3,7 +3,6 @@
 #include "eitem.h"
 #include "eva.h"
 #include "http.h"
-#include "log.h"
 #include "mod.h"
 #include "new.h"
 #include "util.h"
@@ -16,21 +15,11 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Home::Home ()
+Home::Home (type typ, decltype (info) info)
+    : typ (typ), info (std::move (info)), QMainWindow ()
 {
   ui->setupUi (this);
 
-  connect (ui->sort, &QCheckBox::toggled, this, &Home::sort_changed);
-  connect (ui->list, &QListWidget::currentItemChanged, this,
-           &Home::item_selected);
-
-  page_log = new Log (this);
-  page_log->show ();
-}
-
-void
-Home::init_ui ()
-{
   if (typ == type::MERCHANT)
     {
       ui->hint1->setText (tr ("店名: "));
@@ -38,6 +27,13 @@ Home::init_ui ()
       ui->pbtn5->setText (tr ("添加菜品"));
       ui->pbtn6->setText (tr ("修改菜品"));
     }
+
+  connect (ui->sort, &QCheckBox::toggled, this, &Home::sort_changed);
+  connect (ui->list, &QListWidget::currentItemChanged, this,
+           &Home::item_selected);
+
+  load_info ();
+  load_dish ();
 }
 
 void
