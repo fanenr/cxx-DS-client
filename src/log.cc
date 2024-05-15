@@ -9,7 +9,7 @@
 
 #include <QtNetwork/QNetworkReply>
 
-Log::Log (Home *parent) : QMainWindow (parent), prnt (parent)
+Log::Log () : QMainWindow ()
 {
   ui->setupUi (this);
   setAttribute (Qt::WA_DeleteOnClose);
@@ -89,12 +89,7 @@ Log::on_pbtn2_clicked ()
   for (auto it = map.cbegin (); it != map.cend (); it++)
     info.insert (it.key (), it.value ().toString ());
 
-  prnt->typ = typ;
-  prnt->info = std::move (info);
-
-  prnt->load_info ();
-  prnt->load_dish ();
-  prnt->init_ui ();
-  prnt->show ();
+  auto home = new Home (typ, std::move (info));
+  home->show ();
   close ();
 }

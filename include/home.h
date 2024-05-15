@@ -20,7 +20,6 @@ class Home : public QMainWindow
 private:
   type typ;
   stat sts;
-  Log *page_log = nullptr;
   Mod *page_mod = nullptr;
   New *page_new = nullptr;
   Eva *page_eva = nullptr;
@@ -28,11 +27,10 @@ private:
   QMap<QString, QString> info;
 
 public:
-  Home ();
+  Home (type typ, decltype (info) info);
   ~Home () { delete ui; }
 
 public:
-  void init_ui ();
   void load_eva ();
   void load_info ();
   void load_dish ();
