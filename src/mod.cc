@@ -49,8 +49,8 @@ Mod::on_pbtn1_clicked ()
 void
 Mod::on_pbtn2_clicked ()
 {
-  QString req_url;
-  QJsonObject req_data;
+  auto req_url = QString ();
+  auto req_data = QJsonObject ();
 
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
@@ -66,7 +66,7 @@ Mod::on_pbtn2_clicked ()
       break;
     }
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;
@@ -92,9 +92,9 @@ Mod::on_pbtn3_clicked ()
       return;
     }
 
-  QString req_url;
-  QJsonObject req_data;
   auto &info = prnt->info;
+  auto req_url = QString ();
+  auto req_data = QJsonObject ();
 
   req_data["user"] = info["user"];
   req_data["pass"] = info["pass"];
@@ -115,7 +115,7 @@ Mod::on_pbtn3_clicked ()
       break;
     }
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;

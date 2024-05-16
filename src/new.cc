@@ -18,8 +18,8 @@ void
 New::show (oper op)
 {
   QMainWindow::show ();
-  this->op = op;
-  switch (op)
+
+  switch ((this->op = op))
     {
     case oper::NEW:
       ui->pbtn2->setVisible (false);
@@ -37,14 +37,8 @@ New::show (oper op)
     }
 
   if (op == oper::MOD)
-    {
-      auto item = prnt->ui->list->currentItem ();
-      if (!item)
-        return;
-
-      auto const &dish = item->data (Qt::UserRole).value<Dish> ();
-      id = dish.id;
-    }
+    if (auto item = prnt->ui->list->currentItem (); item)
+      id = item->data (Qt::UserRole).value<Dish> ().id;
 }
 
 void
@@ -56,14 +50,14 @@ New::on_pbtn1_clicked ()
 void
 New::on_pbtn2_clicked ()
 {
-  QJsonObject req_data;
+  auto req_data = QJsonObject ();
+  auto req_url = QString (URL_MENU_DEL);
+
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
   req_data["id"] = qint64 (id);
 
-  QString req_url = URL_MENU_DEL;
-
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;
@@ -85,10 +79,10 @@ New::on_pbtn3_clicked ()
       return;
     }
 
+  auto req_url = QString ();
+  auto req_data = QJsonObject ();
   auto price = price_str.toDouble ();
 
-  QString req_url;
-  QJsonObject req_data;
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
 
@@ -108,7 +102,7 @@ New::on_pbtn3_clicked ()
       break;
     }
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;

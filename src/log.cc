@@ -42,9 +42,9 @@ Log::on_pbtn1_clicked ()
 
   if (!page_reg)
     page_reg = new Reg (this);
-  if (page_reg->isVisible ())
-    return;
-  page_reg->show ();
+
+  if (!page_reg->isVisible ())
+    page_reg->show ();
 }
 
 void
@@ -59,8 +59,8 @@ Log::on_pbtn2_clicked ()
       return;
     }
 
-  QString req_url;
   auto typ = category ();
+  auto req_url = QString ();
 
   switch (typ)
     {
@@ -73,18 +73,18 @@ Log::on_pbtn2_clicked ()
       break;
     }
 
-  QJsonObject req_data;
+  auto req_data = QJsonObject ();
   req_data["user"] = user;
   req_data["pass"] = pass;
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
 
   auto res = Http::get_data (reply, this);
   if (!res.has_value ())
     return;
 
-  QMap<QString, QString> info;
+  auto info = QMap<QString, QString> ();
   auto map = res.value ()["data"].toObject ().toVariantMap ();
   for (auto it = map.cbegin (); it != map.cend (); it++)
     info.insert (it.key (), it.value ().toString ());
