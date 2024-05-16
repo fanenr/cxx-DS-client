@@ -17,6 +17,7 @@ void
 Reg::show ()
 {
   QMainWindow::show ();
+
   switch (prnt->category ())
     {
     case type::STUDENT:
@@ -33,9 +34,6 @@ Reg::show ()
       ui->label2->setText (tr ("名称"));
       ui->label3->setText (tr ("电话"));
       ui->label4->setText (tr ("位置"));
-      break;
-
-    default:
       break;
     }
 }
@@ -59,8 +57,8 @@ Reg::on_pbtn2_clicked ()
       return;
     }
 
-  QString req_url;
-  QJsonObject req_data;
+  auto req_url = QString ();
+  auto req_data = QJsonObject ();
 
   req_data["user"] = prnt->ui->ledit1->text ();
   req_data["pass"] = prnt->ui->ledit2->text ();
@@ -82,7 +80,7 @@ Reg::on_pbtn2_clicked ()
       break;
     }
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;

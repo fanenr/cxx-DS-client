@@ -71,7 +71,7 @@ Home::load_eva ()
 
   static QNetworkAccessManager *nam;
 
-  QJsonObject req_data;
+  auto req_data = QJsonObject ();
   req_data["id"] = qint64 (id);
 
   nam = Http::post (
@@ -81,7 +81,7 @@ Home::load_eva ()
         if (!res.has_value ())
           return;
 
-        QVector<Eval> vec;
+        auto vec = QVector<Eval> ();
         auto arr = res.value ()["data"].toArray ();
         for (auto const &item : arr)
           {
@@ -134,7 +134,7 @@ Home::load_dish ()
         if (!res.has_value ())
           return;
 
-        QVector<Dish> vec;
+        auto vec = QVector<Dish> ();
         auto arr = res.value ()["data"].toArray ();
         for (auto const &item : arr)
           {
@@ -177,8 +177,8 @@ Home::sort_changed (bool checked)
 
   is_sorting = true;
   auto ui_list = ui->list;
-  QList<QListWidgetItem *> list;
   auto size = ui_list->count ();
+  auto list = QList<QListWidgetItem *> ();
 
   if (size < 2)
     {
@@ -191,7 +191,8 @@ Home::sort_changed (bool checked)
 
   std::sort (list.begin (), list.end (),
              [this, checked] (QListWidgetItem *a, QListWidgetItem *b) {
-               double num1, num2;
+               auto num1 = double ();
+               auto num2 = double ();
 
                if (sts == stat::DISH)
                  {

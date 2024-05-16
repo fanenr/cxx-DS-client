@@ -13,8 +13,8 @@ void
 Eva::show (oper op)
 {
   QMainWindow::show ();
-  this->op = op;
-  switch (op)
+
+  switch ((this->op = op))
     {
     case oper::NEW:
       ui->pbtn2->setVisible (false);
@@ -46,14 +46,14 @@ Eva::on_pbtn1_clicked ()
 void
 Eva::on_pbtn2_clicked ()
 {
-  QJsonObject req_data;
+  auto req_data = QJsonObject ();
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
   req_data["id"] = qint64 (id);
 
-  QString req_url = URL_EVA_DEL;
+  auto req_url = QString (URL_EVA_DEL);
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;
@@ -75,8 +75,9 @@ Eva::on_pbtn3_clicked ()
       return;
     }
 
-  QString req_url;
-  QJsonObject req_data;
+  auto req_url = QString ();
+  auto req_data = QJsonObject ();
+
   req_data["id"] = qint64 (id);
   req_data["user"] = prnt->info["user"];
   req_data["pass"] = prnt->info["pass"];
@@ -96,7 +97,7 @@ Eva::on_pbtn3_clicked ()
       break;
     }
 
-  Http http;
+  auto http = Http ();
   auto reply = http.post (req_url, req_data);
   if (!Http::get_data (reply, this).has_value ())
     return;
