@@ -4,11 +4,6 @@
 #include "http.h"
 #include "util.h"
 
-#include <QJsonObject>
-#include <QMessageBox>
-
-#include <QtNetwork/QNetworkReply>
-
 New::New (Home *parent) : QMainWindow (parent), prnt (parent)
 {
   ui.setupUi (this);

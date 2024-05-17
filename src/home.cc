@@ -5,20 +5,14 @@
 #include "http.h"
 #include "mod.h"
 #include "new.h"
-#include "util.h"
 
 #include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QMessageBox>
-#include <algorithm>
-
-#include <QtNetwork/QNetworkReply>
 
 Home::Home (type typ, decltype (info) info)
     : typ (typ), info (std::move (info)), QMainWindow ()
 {
   ui.setupUi (this);
+  setAttribute (Qt::WA_DeleteOnClose);
 
   if (typ == type::MERCHANT)
     {

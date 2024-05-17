@@ -3,20 +3,6 @@
 #include "http.h"
 #include "reg.h"
 
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QMessageBox>
-
-#include <QtNetwork/QNetworkReply>
-
-Log::Log () : QMainWindow ()
-{
-  ui.setupUi (this);
-
-  btns.addButton (ui.rbtn1, 1);
-  btns.addButton (ui.rbtn2, 2);
-}
-
 type
 Log::category ()
 {
@@ -34,16 +20,11 @@ Log::on_pbtn1_clicked ()
   auto pass = ui.ledit2->text ();
 
   if (user.isEmpty () || pass.isEmpty ())
-    {
-      QMessageBox::warning (this, tr ("提示"), tr ("请输入帐号密码"));
-      return;
-    }
+    return (void)QMessageBox::warning (this, tr ("提示"),
+                                       tr ("请输入帐号密码"));
 
-  if (!page_reg)
-    page_reg = new Reg (this);
-
-  if (!page_reg->isVisible ())
-    page_reg->show ();
+  auto reg = Reg (this);
+  reg.exec ();
 }
 
 void
@@ -53,10 +34,8 @@ Log::on_pbtn2_clicked ()
   auto pass = ui.ledit2->text ();
 
   if (user.isEmpty () || pass.isEmpty ())
-    {
-      QMessageBox::warning (this, tr ("提示"), tr ("请输入帐号密码"));
-      return;
-    }
+    return (void)QMessageBox::warning (this, tr ("提示"),
+                                       tr ("请输入帐号密码"));
 
   auto typ = category ();
   auto req_url = QString ();

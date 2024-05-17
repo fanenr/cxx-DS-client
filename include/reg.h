@@ -5,19 +5,19 @@
 
 class Log;
 
-class Reg : public QMainWindow
+class Reg : public QDialog
 {
   Q_OBJECT
 
 private:
-  Log *prnt;
+  Log *parent;
   Ui::Reg ui = {};
 
 public:
   Reg (Log *parent);
 
 public:
-  void show ();
+  int exec () override;
 
 private slots:
   void on_pbtn1_clicked ();

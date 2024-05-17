@@ -4,10 +4,6 @@
 #include "ui_log.h"
 #include "util.h"
 
-#include <QButtonGroup>
-
-class Reg;
-
 class Log : public QMainWindow
 {
   Q_OBJECT
@@ -16,11 +12,9 @@ class Log : public QMainWindow
 
 private:
   Ui::Log ui = {};
-  QButtonGroup btns;
-  Reg *page_reg = nullptr;
 
 public:
-  Log ();
+  Log () { ui.setupUi (this); };
 
 public:
   type category ();
