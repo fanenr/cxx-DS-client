@@ -2,23 +2,16 @@
 #include "http.h"
 #include "log.h"
 
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QMessageBox>
-
-#include <QtNetwork/QNetworkReply>
-
-Reg::Reg (Log *parent) : QMainWindow (parent), prnt (parent)
+Reg::Reg (Log *parent) : QDialog (parent)
 {
+  this->parent = parent;
   ui.setupUi (this);
 }
 
-void
-Reg::show ()
+int
+Reg::exec ()
 {
-  QMainWindow::show ();
-
-  switch (prnt->category ())
+  switch (parent->category ())
     {
     case type::STUDENT:
       setWindowTitle (tr ("学生注册"));
@@ -36,6 +29,8 @@ Reg::show ()
       ui.label4->setText (tr ("位置"));
       break;
     }
+
+  return QDialog::exec ();
 }
 
 void
@@ -60,10 +55,10 @@ Reg::on_pbtn2_clicked ()
   auto req_url = QString ();
   auto req_data = QJsonObject ();
 
-  req_data["user"] = prnt->ui.ledit1->text ();
-  req_data["pass"] = prnt->ui.ledit2->text ();
+  req_data["user"] = parent->ui.ledit1->text ();
+  req_data["pass"] = parent->ui.ledit2->text ();
 
-  switch (prnt->category ())
+  switch (parent->category ())
     {
     case type::STUDENT:
       req_data["id"] = str1;

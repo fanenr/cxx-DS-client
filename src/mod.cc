@@ -3,12 +3,6 @@
 #include "http.h"
 #include "util.h"
 
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QMessageBox>
-
-#include <QtNetwork/QNetworkReply>
-
 Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
 {
   ui.setupUi (this);
