@@ -11,7 +11,7 @@
 
 New::New (Home *parent) : QMainWindow (parent), prnt (parent)
 {
-  ui->setupUi (this);
+  ui.setupUi (this);
 }
 
 void
@@ -22,23 +22,23 @@ New::show (oper op)
   switch ((this->op = op))
     {
     case oper::NEW:
-      ui->pbtn2->setVisible (false);
+      ui.pbtn2->setVisible (false);
       setWindowTitle (tr ("新建菜品"));
-      ui->pbtn3->setText (tr ("创建"));
-      ui->label1->setText (tr ("新建菜品"));
+      ui.pbtn3->setText (tr ("创建"));
+      ui.label1->setText (tr ("新建菜品"));
       break;
 
     case oper::MOD:
-      ui->pbtn2->setVisible (true);
+      ui.pbtn2->setVisible (true);
       setWindowTitle (tr ("修改菜品"));
-      ui->pbtn3->setText (tr ("修改"));
-      ui->label1->setText (tr ("修改菜品"));
+      ui.pbtn3->setText (tr ("修改"));
+      ui.label1->setText (tr ("修改菜品"));
       break;
     }
 
   if (op == oper::MOD)
-    if (auto item = prnt->ui->list->currentItem (); item)
-      id = item->data (Qt::UserRole).value<Dish> ().id;
+    if (auto item = prnt->ui.list->currentItem (); item)
+      id = (item->data (Qt::UserRole)).value<Dish> ().id;
 }
 
 void
@@ -70,8 +70,8 @@ New::on_pbtn2_clicked ()
 void
 New::on_pbtn3_clicked ()
 {
-  auto name = ui->ledit1->text ();
-  auto price_str = ui->ledit2->text ();
+  auto name = ui.ledit1->text ();
+  auto price_str = ui.ledit2->text ();
 
   if (name.isEmpty () || price_str.isEmpty ())
     {

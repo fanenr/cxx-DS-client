@@ -18,18 +18,18 @@
 Home::Home (type typ, decltype (info) info)
     : typ (typ), info (std::move (info)), QMainWindow ()
 {
-  ui->setupUi (this);
+  ui.setupUi (this);
 
   if (typ == type::MERCHANT)
     {
-      ui->hint1->setText (tr ("店名: "));
-      ui->hint3->setText (tr ("位置: "));
-      ui->pbtn5->setText (tr ("添加菜品"));
-      ui->pbtn6->setText (tr ("修改菜品"));
+      ui.hint1->setText (tr ("店名: "));
+      ui.hint3->setText (tr ("位置: "));
+      ui.pbtn5->setText (tr ("添加菜品"));
+      ui.pbtn6->setText (tr ("修改菜品"));
     }
 
-  connect (ui->sort, &QCheckBox::toggled, this, &Home::sort_changed);
-  connect (ui->list, &QListWidget::currentItemChanged, this,
+  connect (ui.sort, &QCheckBox::toggled, this, &Home::sort_changed);
+  connect (ui.list, &QListWidget::currentItemChanged, this,
            &Home::item_selected);
 
   load_info ();
@@ -39,18 +39,18 @@ Home::Home (type typ, decltype (info) info)
 void
 Home::load_info ()
 {
-  ui->info1->setText (info["name"]);
-  ui->info2->setText (info["user"]);
-  ui->info4->setText (info["number"]);
+  ui.info1->setText (info["name"]);
+  ui.info2->setText (info["user"]);
+  ui.info4->setText (info["number"]);
 
   switch (typ)
     {
     case type::STUDENT:
-      ui->info3->setText (info["id"]);
+      ui.info3->setText (info["id"]);
       break;
 
     case type::MERCHANT:
-      ui->info3->setText (info["position"]);
+      ui.info3->setText (info["position"]);
       break;
     }
 }
@@ -58,16 +58,16 @@ Home::load_info ()
 void
 Home::load_eva ()
 {
-  auto item = ui->list->currentItem ();
+  auto item = ui.list->currentItem ();
   auto id = item->data (Qt::UserRole).value<Dish> ().id;
 
   sts = stat::EVA;
-  ui->list->clear ();
-  ui->list->clearSelection ();
+  ui.list->clear ();
+  ui.list->clearSelection ();
 
-  ui->pbtn4->setEnabled (false);
-  ui->pbtn5->setEnabled (false);
-  ui->pbtn6->setEnabled (false);
+  ui.pbtn4->setEnabled (false);
+  ui.pbtn5->setEnabled (false);
+  ui.pbtn6->setEnabled (false);
 
   static QNetworkAccessManager *nam;
 
@@ -95,7 +95,7 @@ Home::load_eva ()
             });
           }
 
-        auto list = ui->list;
+        auto list = ui.list;
         for (auto &eval : vec)
           {
             auto widget = new Eitem (list, eval);
@@ -115,20 +115,20 @@ void
 Home::load_dish ()
 {
   sts = stat::DISH;
-  ui->list->clear ();
-  ui->list->clearSelection ();
+  ui.list->clear ();
+  ui.list->clearSelection ();
 
-  ui->pbtn3->setEnabled (false);
-  ui->pbtn4->setEnabled (false);
-  ui->pbtn5->setEnabled (false);
-  ui->pbtn6->setEnabled (false);
+  ui.pbtn3->setEnabled (false);
+  ui.pbtn4->setEnabled (false);
+  ui.pbtn5->setEnabled (false);
+  ui.pbtn6->setEnabled (false);
 
   static QNetworkAccessManager *nam;
 
   nam = Http::post (
       URL_MENU_LIST, {},
       [this] (QNetworkReply *reply) {
-        ui->pbtn3->setEnabled (true);
+        ui.pbtn3->setEnabled (true);
 
         auto res = Http::get_data (reply, this);
         if (!res.has_value ())
@@ -149,7 +149,7 @@ Home::load_dish ()
             });
           }
 
-        auto list = ui->list;
+        auto list = ui.list;
         for (auto &dish : vec)
           {
             auto widget = new Ditem (list, dish);
@@ -163,7 +163,7 @@ Home::load_dish ()
           }
 
         if (typ == type::MERCHANT)
-          ui->pbtn5->setEnabled (true);
+          ui.pbtn5->setEnabled (true);
       },
       nam);
 }
@@ -176,7 +176,7 @@ Home::sort_changed (bool checked)
     return;
 
   is_sorting = true;
-  auto ui_list = ui->list;
+  auto ui_list = ui.list;
   auto size = ui_list->count ();
   auto list = QList<QListWidgetItem *> ();
 
@@ -241,9 +241,9 @@ Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
 {
   if (sts == stat::DISH && item)
     {
-      ui->pbtn4->setEnabled (true);
-      ui->pbtn5->setEnabled (true);
-      ui->pbtn6->setEnabled (true);
+      ui.pbtn4->setEnabled (true);
+      ui.pbtn5->setEnabled (true);
+      ui.pbtn6->setEnabled (true);
     }
 }
 

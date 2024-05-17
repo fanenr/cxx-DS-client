@@ -2,6 +2,7 @@
 #define UTIL_H
 
 #define URL_BASE "http://127.0.0.1:8000/api"
+
 #define URL_BASE_STUDENT URL_BASE "/student"
 #define URL_BASE_MERCHANT URL_BASE "/merchant"
 #define URL_BASE_MENU URL_BASE "/menu"

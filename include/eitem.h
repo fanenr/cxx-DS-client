@@ -17,14 +17,14 @@ Q_DECLARE_METATYPE (Eval);
 class Eitem : public QWidget
 {
   Q_OBJECT
+
   friend class Home;
 
 private:
-  Ui::Eitem *ui = new Ui::Eitem;
+  Ui::Eitem ui = {};
 
 public:
   Eitem (QWidget *parent, Eval const &info);
-  ~Eitem () { delete ui; }
 
 public:
   void set_info (Eval const &info);

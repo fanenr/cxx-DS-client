@@ -11,19 +11,18 @@
 
 Log::Log () : QMainWindow ()
 {
-  ui->setupUi (this);
-  setAttribute (Qt::WA_DeleteOnClose);
+  ui.setupUi (this);
 
-  btns.addButton (ui->rbtn1, 1);
-  btns.addButton (ui->rbtn2, 2);
+  btns.addButton (ui.rbtn1, 1);
+  btns.addButton (ui.rbtn2, 2);
 }
 
 type
 Log::category ()
 {
-  if (ui->rbtn1->isChecked ())
+  if (ui.rbtn1->isChecked ())
     return type::STUDENT;
-  if (ui->rbtn2->isChecked ())
+  if (ui.rbtn2->isChecked ())
     return type::MERCHANT;
   abort ();
 }
@@ -31,8 +30,8 @@ Log::category ()
 void
 Log::on_pbtn1_clicked ()
 {
-  auto user = ui->ledit1->text ();
-  auto pass = ui->ledit2->text ();
+  auto user = ui.ledit1->text ();
+  auto pass = ui.ledit2->text ();
 
   if (user.isEmpty () || pass.isEmpty ())
     {
@@ -50,8 +49,8 @@ Log::on_pbtn1_clicked ()
 void
 Log::on_pbtn2_clicked ()
 {
-  auto user = ui->ledit1->text ();
-  auto pass = ui->ledit2->text ();
+  auto user = ui.ledit1->text ();
+  auto pass = ui.ledit2->text ();
 
   if (user.isEmpty () || pass.isEmpty ())
     {
