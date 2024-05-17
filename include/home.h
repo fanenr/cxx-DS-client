@@ -12,23 +12,25 @@ class Log;
 class Home : public QMainWindow
 {
   Q_OBJECT
+
   friend class Log;
   friend class Mod;
   friend class New;
   friend class Eva;
 
 private:
-  type typ;
-  stat sts;
+  using info_type = QMap<QString, QString>;
+
   Mod *page_mod = nullptr;
   New *page_new = nullptr;
   Eva *page_eva = nullptr;
-  Ui::Home *ui = new Ui::Home;
-  QMap<QString, QString> info;
+  Ui::Home ui = {};
+  info_type info;
+  type typ;
+  stat sts;
 
 public:
-  Home (type typ, decltype (info) info);
-  ~Home () { delete ui; }
+  Home (type typ, info_type info);
 
 public:
   void load_eva ();

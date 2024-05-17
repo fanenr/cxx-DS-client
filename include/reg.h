@@ -11,11 +11,10 @@ class Reg : public QMainWindow
 
 private:
   Log *prnt;
-  Ui::Reg *ui = new Ui::Reg;
+  Ui::Reg ui = {};
 
 public:
   Reg (Log *parent);
-  ~Reg () { delete ui; }
 
 public:
   void show ();

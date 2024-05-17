@@ -11,16 +11,16 @@ class Reg;
 class Log : public QMainWindow
 {
   Q_OBJECT
+
   friend class Reg;
 
 private:
+  Ui::Log ui = {};
   QButtonGroup btns;
   Reg *page_reg = nullptr;
-  Ui::Log *ui = new Ui::Log;
 
 public:
   Log ();
-  ~Log () { delete ui; }
 
 public:
   type category ();

@@ -10,7 +10,7 @@
 
 Reg::Reg (Log *parent) : QMainWindow (parent), prnt (parent)
 {
-  ui->setupUi (this);
+  ui.setupUi (this);
 }
 
 void
@@ -22,18 +22,18 @@ Reg::show ()
     {
     case type::STUDENT:
       setWindowTitle (tr ("学生注册"));
-      ui->label1->setText (tr ("学生注册"));
-      ui->label2->setText (tr ("学号"));
-      ui->label3->setText (tr ("昵称"));
-      ui->label4->setText (tr ("电话"));
+      ui.label1->setText (tr ("学生注册"));
+      ui.label2->setText (tr ("学号"));
+      ui.label3->setText (tr ("昵称"));
+      ui.label4->setText (tr ("电话"));
       break;
 
     case type::MERCHANT:
       setWindowTitle (tr ("商户注册"));
-      ui->label1->setText (tr ("商户注册"));
-      ui->label2->setText (tr ("名称"));
-      ui->label3->setText (tr ("电话"));
-      ui->label4->setText (tr ("位置"));
+      ui.label1->setText (tr ("商户注册"));
+      ui.label2->setText (tr ("名称"));
+      ui.label3->setText (tr ("电话"));
+      ui.label4->setText (tr ("位置"));
       break;
     }
 }
@@ -47,9 +47,9 @@ Reg::on_pbtn1_clicked ()
 void
 Reg::on_pbtn2_clicked ()
 {
-  auto str1 = ui->ledit1->text ();
-  auto str2 = ui->ledit2->text ();
-  auto str3 = ui->ledit3->text ();
+  auto str1 = ui.ledit1->text ();
+  auto str2 = ui.ledit2->text ();
+  auto str3 = ui.ledit3->text ();
 
   if (str1.isEmpty () || str2.isEmpty () || str3.isEmpty ())
     {
@@ -60,8 +60,8 @@ Reg::on_pbtn2_clicked ()
   auto req_url = QString ();
   auto req_data = QJsonObject ();
 
-  req_data["user"] = prnt->ui->ledit1->text ();
-  req_data["pass"] = prnt->ui->ledit2->text ();
+  req_data["user"] = prnt->ui.ledit1->text ();
+  req_data["pass"] = prnt->ui.ledit2->text ();
 
   switch (prnt->category ())
     {

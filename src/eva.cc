@@ -6,7 +6,7 @@
 
 Eva::Eva (Home *parent) : QMainWindow (parent), prnt (parent)
 {
-  ui->setupUi (this);
+  ui.setupUi (this);
 }
 
 void
@@ -17,23 +17,23 @@ Eva::show (oper op)
   switch ((this->op = op))
     {
     case oper::NEW:
-      ui->pbtn2->setVisible (false);
+      ui.pbtn2->setVisible (false);
       setWindowTitle (tr ("添加评价"));
-      ui->label1->setText (tr ("添加评价"));
+      ui.label1->setText (tr ("添加评价"));
       break;
 
     case oper::MOD:
-      ui->pbtn2->setVisible (true);
+      ui.pbtn2->setVisible (true);
       setWindowTitle (tr ("修改评价"));
-      ui->label1->setText (tr ("修改评价"));
+      ui.label1->setText (tr ("修改评价"));
       break;
     }
 
-  auto item = prnt->ui->list->currentItem ();
+  auto item = prnt->ui.list->currentItem ();
   if (!item)
     return;
 
-  auto const &eval = item->data (Qt::UserRole).value<Dish> ();
+  auto const &eval = (item->data (Qt::UserRole)).value<Dish> ();
   id = eval.id;
 }
 
@@ -66,8 +66,8 @@ Eva::on_pbtn2_clicked ()
 void
 Eva::on_pbtn3_clicked ()
 {
-  auto grade = ui->spin->value ();
-  auto evaluation = ui->edit->toPlainText ();
+  auto grade = ui.spin->value ();
+  auto evaluation = ui.edit->toPlainText ();
 
   if (evaluation.isEmpty ())
     {

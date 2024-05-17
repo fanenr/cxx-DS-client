@@ -11,18 +11,18 @@
 
 Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
 {
-  ui->setupUi (this);
+  ui.setupUi (this);
 
   switch (prnt->typ)
     {
     case type::STUDENT:
-      ui->label3->setText (tr ("新昵称"));
-      ui->label5->hide ();
-      ui->ledit4->hide ();
+      ui.label3->setText (tr ("新昵称"));
+      ui.label5->hide ();
+      ui.ledit4->hide ();
       break;
 
     case type::MERCHANT:
-      ui->label3->setText (tr ("新名称"));
+      ui.label3->setText (tr ("新名称"));
       break;
     }
 }
@@ -32,12 +32,12 @@ Mod::show ()
 {
   QMainWindow::show ();
 
-  ui->ledit1->setText (prnt->info["pass"]);
-  ui->ledit2->setText (prnt->info["name"]);
-  ui->ledit3->setText (prnt->info["number"]);
+  ui.ledit1->setText (prnt->info["pass"]);
+  ui.ledit2->setText (prnt->info["name"]);
+  ui.ledit3->setText (prnt->info["number"]);
 
   if (prnt->typ == type::MERCHANT)
-    ui->ledit4->setText (prnt->info["position"]);
+    ui.ledit4->setText (prnt->info["position"]);
 }
 
 void
@@ -78,10 +78,10 @@ Mod::on_pbtn2_clicked ()
 void
 Mod::on_pbtn3_clicked ()
 {
-  auto npass = ui->ledit1->text ();
-  auto nname = ui->ledit2->text ();
-  auto nnumber = ui->ledit3->text ();
-  auto nposition = ui->ledit4->text ();
+  auto npass = ui.ledit1->text ();
+  auto nname = ui.ledit2->text ();
+  auto nnumber = ui.ledit3->text ();
+  auto nposition = ui.ledit4->text ();
 
   auto typ = prnt->typ;
 

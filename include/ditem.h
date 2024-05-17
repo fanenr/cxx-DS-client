@@ -18,14 +18,14 @@ Q_DECLARE_METATYPE (Dish);
 class Ditem : public QWidget
 {
   Q_OBJECT
+
   friend class Home;
 
 private:
-  Ui::Ditem *ui = new Ui::Ditem;
+  Ui::Ditem ui = {};
 
 public:
   Ditem (QWidget *parent, Dish const &info);
-  ~Ditem () { delete ui; }
 
 public:
   void set_info (Dish const &info);

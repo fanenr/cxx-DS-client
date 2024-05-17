@@ -11,11 +11,10 @@ class Mod : public QMainWindow
 
 private:
   Home *prnt;
-  Ui::Mod *ui = new Ui::Mod;
+  Ui::Mod ui = {};
 
 public:
   Mod (Home *parent);
-  ~Mod () { delete ui; }
 
 public:
   void show ();

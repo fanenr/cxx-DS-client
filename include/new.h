@@ -14,11 +14,10 @@ private:
   oper op;
   int64_t id;
   Home *prnt;
-  Ui::New *ui = new Ui::New;
+  Ui::New ui = {};
 
 public:
   New (Home *parent);
-  ~New () { delete ui; }
 
 public:
   void show (oper op);
