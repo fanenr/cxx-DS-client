@@ -244,11 +244,8 @@ Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
 void
 Home::on_pbtn1_clicked ()
 {
-  if (!page_mod)
-    page_mod = new Mod (this);
-  if (page_mod->isVisible ())
-    return;
-  page_mod->show ();
+  auto mod = Mod (this);
+  mod.exec ();
 }
 
 void

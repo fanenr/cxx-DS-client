@@ -3,11 +3,12 @@
 #include "http.h"
 #include "util.h"
 
-Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
+Mod::Mod (Home *parent) : QDialog (parent)
 {
   ui.setupUi (this);
+  this->parent = parent;
 
-  switch (prnt->typ)
+  switch (parent->typ)
     {
     case type::STUDENT:
       ui.label3->setText (tr ("新昵称"));
@@ -21,17 +22,17 @@ Mod::Mod (Home *parent) : QMainWindow (parent), prnt (parent)
     }
 }
 
-void
-Mod::show ()
+int
+Mod::exec ()
 {
-  QMainWindow::show ();
+  ui.ledit1->setText (parent->info["pass"]);
+  ui.ledit2->setText (parent->info["name"]);
+  ui.ledit3->setText (parent->info["number"]);
 
-  ui.ledit1->setText (prnt->info["pass"]);
-  ui.ledit2->setText (prnt->info["name"]);
-  ui.ledit3->setText (prnt->info["number"]);
+  if (parent->typ == type::MERCHANT)
+    ui.ledit4->setText (parent->info["position"]);
 
-  if (prnt->typ == type::MERCHANT)
-    ui.ledit4->setText (prnt->info["position"]);
+  return QDialog::exec ();
 }
 
 void
@@ -46,10 +47,10 @@ Mod::on_pbtn2_clicked ()
   auto req_url = QString ();
   auto req_data = QJsonObject ();
 
-  req_data["user"] = prnt->info["user"];
-  req_data["pass"] = prnt->info["pass"];
+  req_data["user"] = parent->info["user"];
+  req_data["pass"] = parent->info["pass"];
 
-  switch (prnt->typ)
+  switch (parent->typ)
     {
     case type::STUDENT:
       req_url = URL_STUDENT_DEL;
@@ -66,7 +67,7 @@ Mod::on_pbtn2_clicked ()
     return;
 
   QMessageBox::information (this, tr ("提示"), tr ("注销成功"));
-  prnt->close ();
+  parent->close ();
 }
 
 void
@@ -77,7 +78,7 @@ Mod::on_pbtn3_clicked ()
   auto nnumber = ui.ledit3->text ();
   auto nposition = ui.ledit4->text ();
 
-  auto typ = prnt->typ;
+  auto typ = parent->typ;
 
   if (npass.isEmpty () || nname.isEmpty () || nnumber.isEmpty ()
       || (nposition.isEmpty () && typ == type::MERCHANT))
@@ -86,7 +87,7 @@ Mod::on_pbtn3_clicked ()
       return;
     }
 
-  auto &info = prnt->info;
+  auto &info = parent->info;
   auto req_url = QString ();
   auto req_data = QJsonObject ();
 
@@ -120,7 +121,7 @@ Mod::on_pbtn3_clicked ()
   if (typ == type::MERCHANT)
     info["position"] = std::move (nposition);
 
-  prnt->load_info ();
-  prnt->load_dish ();
+  parent->load_info ();
+  parent->load_dish ();
   close ();
 }
