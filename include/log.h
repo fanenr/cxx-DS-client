@@ -4,7 +4,7 @@
 #include "ui_log.h"
 #include "util.h"
 
-class Log : public QMainWindow
+class Log : public QDialog
 {
   Q_OBJECT
 

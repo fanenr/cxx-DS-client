@@ -4,16 +4,15 @@
 #include "http.h"
 #include "util.h"
 
-Eva::Eva (Home *parent) : QMainWindow (parent), prnt (parent)
+Eva::Eva (Home *parent) : QDialog (parent)
 {
   ui.setupUi (this);
+  this->parent = parent;
 }
 
-void
-Eva::show (oper op)
+int
+Eva::exec (oper op)
 {
-  QMainWindow::show ();
-
   switch ((this->op = op))
     {
     case oper::NEW:
@@ -29,12 +28,13 @@ Eva::show (oper op)
       break;
     }
 
-  auto item = prnt->ui.list->currentItem ();
-  if (!item)
-    return;
+  if (auto item = parent->ui.list->currentItem (); item)
+    {
+      auto const &eval = (item->data (Qt::UserRole)).value<Dish> ();
+      id = eval.id;
+    }
 
-  auto const &eval = (item->data (Qt::UserRole)).value<Dish> ();
-  id = eval.id;
+  return QDialog::exec ();
 }
 
 void
@@ -47,8 +47,8 @@ void
 Eva::on_pbtn2_clicked ()
 {
   auto req_data = QJsonObject ();
-  req_data["user"] = prnt->info["user"];
-  req_data["pass"] = prnt->info["pass"];
+  req_data["user"] = parent->info["user"];
+  req_data["pass"] = parent->info["pass"];
   req_data["id"] = qint64 (id);
 
   auto req_url = QString (URL_EVA_DEL);
@@ -59,7 +59,7 @@ Eva::on_pbtn2_clicked ()
     return;
 
   QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
-  prnt->load_dish ();
+  parent->load_dish ();
   close ();
 }
 
@@ -79,8 +79,8 @@ Eva::on_pbtn3_clicked ()
   auto req_data = QJsonObject ();
 
   req_data["id"] = qint64 (id);
-  req_data["user"] = prnt->info["user"];
-  req_data["pass"] = prnt->info["pass"];
+  req_data["user"] = parent->info["user"];
+  req_data["pass"] = parent->info["pass"];
 
   switch (op)
     {
@@ -103,6 +103,6 @@ Eva::on_pbtn3_clicked ()
     return;
 
   QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
-  prnt->load_dish ();
+  parent->load_dish ();
   close ();
 }

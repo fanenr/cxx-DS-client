@@ -276,7 +276,7 @@ Home::on_pbtn5_clicked ()
         page_eva = new Eva (this);
       if (page_eva->isVisible ())
         return;
-      page_eva->show (oper::NEW);
+      page_eva->exec (oper::NEW);
       break;
 
     case type::MERCHANT:
@@ -284,7 +284,7 @@ Home::on_pbtn5_clicked ()
         page_new = new New (this);
       if (page_new->isVisible ())
         return;
-      page_new->show (oper::NEW);
+      page_new->exec (oper::NEW);
       break;
     }
 }
@@ -299,7 +299,7 @@ Home::on_pbtn6_clicked ()
         page_eva = new Eva (this);
       if (page_eva->isVisible ())
         return;
-      page_eva->show (oper::MOD);
+      page_eva->exec (oper::MOD);
       break;
 
     case type::MERCHANT:
@@ -307,7 +307,7 @@ Home::on_pbtn6_clicked ()
         page_new = new New (this);
       if (page_new->isVisible ())
         return;
-      page_new->show (oper::MOD);
+      page_new->exec (oper::MOD);
       break;
     }
 }

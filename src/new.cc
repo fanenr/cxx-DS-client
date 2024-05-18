@@ -4,16 +4,15 @@
 #include "http.h"
 #include "util.h"
 
-New::New (Home *parent) : QMainWindow (parent), prnt (parent)
+New::New (Home *parent) : QDialog (parent)
 {
   ui.setupUi (this);
+  this->parent = parent;
 }
 
-void
-New::show (oper op)
+int
+New::exec (oper op)
 {
-  QMainWindow::show ();
-
   switch ((this->op = op))
     {
     case oper::NEW:
@@ -32,8 +31,10 @@ New::show (oper op)
     }
 
   if (op == oper::MOD)
-    if (auto item = prnt->ui.list->currentItem (); item)
+    if (auto item = parent->ui.list->currentItem (); item)
       id = (item->data (Qt::UserRole)).value<Dish> ().id;
+
+  return QDialog::exec ();
 }
 
 void
@@ -48,8 +49,8 @@ New::on_pbtn2_clicked ()
   auto req_data = QJsonObject ();
   auto req_url = QString (URL_MENU_DEL);
 
-  req_data["user"] = prnt->info["user"];
-  req_data["pass"] = prnt->info["pass"];
+  req_data["user"] = parent->info["user"];
+  req_data["pass"] = parent->info["pass"];
   req_data["id"] = qint64 (id);
 
   auto http = Http ();
@@ -58,7 +59,7 @@ New::on_pbtn2_clicked ()
     return;
 
   QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
-  prnt->load_dish ();
+  parent->load_dish ();
   close ();
 }
 
@@ -78,8 +79,8 @@ New::on_pbtn3_clicked ()
   auto req_data = QJsonObject ();
   auto price = price_str.toDouble ();
 
-  req_data["user"] = prnt->info["user"];
-  req_data["pass"] = prnt->info["pass"];
+  req_data["user"] = parent->info["user"];
+  req_data["pass"] = parent->info["pass"];
 
   switch (op)
     {
@@ -103,6 +104,6 @@ New::on_pbtn3_clicked ()
     return;
 
   QMessageBox::information (this, tr ("提示"), tr ("操作成功，返回查看"));
-  prnt->load_dish ();
+  parent->load_dish ();
   close ();
 }

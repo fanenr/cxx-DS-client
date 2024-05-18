@@ -6,21 +6,21 @@
 
 class Home;
 
-class Eva : public QMainWindow
+class Eva : public QDialog
 {
   Q_OBJECT
 
 private:
   oper op;
   int64_t id;
-  Home *prnt;
+  Home *parent;
   Ui::Eva ui = {};
 
 public:
   Eva (Home *parent);
 
 public:
-  void show (oper op);
+  int exec (oper op);
 
 private slots:
   void on_pbtn1_clicked ();
