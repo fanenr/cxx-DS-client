@@ -58,6 +58,7 @@ Home::load_eva ()
   sts = stat::EVA;
   ui.list->clear ();
   ui.list->clearSelection ();
+  ui.group_2->setTitle ("评价列表");
 
   ui.pbtn4->setEnabled (false);
   ui.pbtn5->setEnabled (false);
@@ -111,6 +112,7 @@ Home::load_dish ()
   sts = stat::DISH;
   ui.list->clear ();
   ui.list->clearSelection ();
+  ui.group_2->setTitle ("菜品列表");
 
   ui.pbtn3->setEnabled (false);
   ui.pbtn4->setEnabled (false);
