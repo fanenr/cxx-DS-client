@@ -12,15 +12,14 @@ class Eva : public QDialog
 
 private:
   oper op;
-  int64_t id;
   Home *parent;
   Ui::Eva ui = {};
 
 public:
-  Eva (Home *parent);
+  Eva (Home *parent, oper op);
 
-public:
-  int exec (oper op);
+private:
+  qint64 get_id ();
 
 private slots:
   void on_pbtn1_clicked ();

@@ -21,8 +21,6 @@ class Home : public QMainWindow
 private:
   using info_type = QMap<QString, QString>;
 
-  New *page_new = nullptr;
-  Eva *page_eva = nullptr;
   Ui::Home ui = {};
   info_type info;
   type typ;

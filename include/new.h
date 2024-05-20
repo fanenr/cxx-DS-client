@@ -12,15 +12,14 @@ class New : public QDialog
 
 private:
   oper op;
-  int64_t id;
   Home *parent;
   Ui::New ui = {};
 
 public:
-  New (Home *parent);
+  New (Home *parent, oper op);
 
-public:
-  int exec (oper op);
+private:
+  qint64 get_id ();
 
 private slots:
   void on_pbtn1_clicked ();
