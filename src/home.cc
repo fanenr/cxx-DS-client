@@ -8,7 +8,7 @@
 
 #include <QJsonArray>
 
-Home::Home (type typ, decltype (info) info)
+Home::Home (type typ, info_type info)
     : typ (typ), info (std::move (info)), QMainWindow ()
 {
   ui.setupUi (this);
@@ -274,19 +274,17 @@ Home::on_pbtn5_clicked ()
   switch (typ)
     {
     case type::STUDENT:
-      if (!page_eva)
-        page_eva = new Eva (this);
-      if (page_eva->isVisible ())
-        return;
-      page_eva->exec (oper::NEW);
+      {
+        auto dialog = Eva (this, oper::NEW);
+        dialog.exec ();
+      }
       break;
 
     case type::MERCHANT:
-      if (!page_new)
-        page_new = new New (this);
-      if (page_new->isVisible ())
-        return;
-      page_new->exec (oper::NEW);
+      {
+        auto dialog = New (this, oper::NEW);
+        dialog.exec ();
+      }
       break;
     }
 }
@@ -297,19 +295,17 @@ Home::on_pbtn6_clicked ()
   switch (typ)
     {
     case type::STUDENT:
-      if (!page_eva)
-        page_eva = new Eva (this);
-      if (page_eva->isVisible ())
-        return;
-      page_eva->exec (oper::MOD);
+      {
+        auto dialog = Eva (this, oper::MOD);
+        dialog.exec ();
+      }
       break;
 
     case type::MERCHANT:
-      if (!page_new)
-        page_new = new New (this);
-      if (page_new->isVisible ())
-        return;
-      page_new->exec (oper::MOD);
+      {
+        auto dialog = New (this, oper::MOD);
+        dialog.exec ();
+      }
       break;
     }
 }

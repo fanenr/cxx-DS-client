@@ -4,16 +4,11 @@
 #include "http.h"
 #include "util.h"
 
-New::New (Home *parent) : QDialog (parent)
+New::New (Home *parent, oper op) : QDialog (parent), parent (parent), op (op)
 {
   ui.setupUi (this);
-  this->parent = parent;
-}
 
-int
-New::exec (oper op)
-{
-  switch ((this->op = op))
+  switch (op)
     {
     case oper::NEW:
       ui.pbtn2->setVisible (false);
@@ -29,12 +24,14 @@ New::exec (oper op)
       ui.label1->setText (tr ("修改菜品"));
       break;
     }
+}
 
-  if (op == oper::MOD)
-    if (auto item = parent->ui.list->currentItem (); item)
-      id = (item->data (Qt::UserRole)).value<Dish> ().id;
-
-  return QDialog::exec ();
+qint64
+New::get_id ()
+{
+  auto item = parent->ui.list->currentItem ();
+  auto dish = (item->data (Qt::UserRole)).value<Dish> ();
+  return dish.id;
 }
 
 void
@@ -49,9 +46,9 @@ New::on_pbtn2_clicked ()
   auto req_data = QJsonObject ();
   auto req_url = QString (URL_MENU_DEL);
 
+  req_data["id"] = get_id ();
   req_data["user"] = parent->info["user"];
   req_data["pass"] = parent->info["pass"];
-  req_data["id"] = qint64 (id);
 
   auto http = Http ();
   auto reply = http.post (req_url, req_data);
@@ -91,8 +88,8 @@ New::on_pbtn3_clicked ()
       break;
 
     case oper::MOD:
-      req_data["id"] = qint64 (id);
       req_data["nname"] = name;
+      req_data["id"] = get_id ();
       req_data["nprice"] = price;
       req_url = URL_MENU_MOD;
       break;
