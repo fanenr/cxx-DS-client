@@ -30,8 +30,7 @@ qint64
 New::get_id ()
 {
   auto item = parent->ui.list->currentItem ();
-  auto dish = (item->data (Qt::UserRole)).value<Dish> ();
-  return dish.id;
+  return dynamic_cast<DishItem *> (item)->data.id;
 }
 
 void

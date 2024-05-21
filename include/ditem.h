@@ -2,6 +2,7 @@
 #define DITEM_H
 
 #include "ui_ditem.h"
+#include <QListWidgetItem>
 
 struct Dish
 {
@@ -11,24 +12,50 @@ struct Dish
   QString user;
   QString uname;
   QString position;
+
+  Dish &operator= (Dish const &) = default;
+  Dish &operator= (Dish &&) = default;
+  Dish (Dish const &) = default;
+  Dish (Dish &&) = default;
+  ~Dish () = default;
 };
 
-Q_DECLARE_METATYPE (Dish);
-
-class Ditem : public QWidget
+class DishItemWidget : public QWidget
 {
   Q_OBJECT
-
-  friend class Home;
 
 private:
   Ui::Ditem ui = {};
 
 public:
-  Ditem (QWidget *parent, Dish const &info);
+  DishItemWidget (Dish const &data) : QWidget ()
+  {
+    ui.setupUi (this);
+    ui.label1->setText (data.name);
+    ui.label3->setText (data.uname);
+    ui.label4->setText (data.position);
+    ui.label2->setText (QString::number (data.price, 'f', 1) + " 元");
+  }
+};
 
+class DishItem : public QListWidgetItem
+{
 public:
-  void set_info (Dish const &info);
+  Dish data;
+
+  DishItem (QListWidget *list, Dish dish)
+      : QListWidgetItem (list), data (std::move (dish))
+  {
+    auto widget = new DishItemWidget (data);
+    QListWidgetItem::setSizeHint (widget->sizeHint ());
+    list->setItemWidget (this, widget);
+  }
+
+  bool
+  operator< (QListWidgetItem const &other) const override
+  {
+    return data.price < static_cast<DishItem const &> (other).data.price;
+  }
 };
 
 #endif

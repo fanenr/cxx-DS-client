@@ -50,63 +50,6 @@ Home::load_info ()
 }
 
 void
-Home::load_eva ()
-{
-  auto item = ui.list->currentItem ();
-  auto id = item->data (Qt::UserRole).value<Dish> ().id;
-
-  sts = stat::EVA;
-  ui.list->clear ();
-  ui.list->clearSelection ();
-  ui.group_2->setTitle ("评价列表");
-
-  ui.pbtn4->setEnabled (false);
-  ui.pbtn5->setEnabled (false);
-  ui.pbtn6->setEnabled (false);
-
-  static QNetworkAccessManager *nam;
-
-  auto req_data = QJsonObject ();
-  req_data["id"] = qint64 (id);
-
-  nam = Http::post (
-      URL_EVA_LIST, req_data,
-      [this] (QNetworkReply *reply) {
-        auto res = Http::get_data (reply, this);
-        if (!res.has_value ())
-          return;
-
-        auto vec = QVector<Eval> ();
-        auto arr = res.value ()["data"].toArray ();
-        for (auto const &item : arr)
-          {
-            auto const &obj = item.toObject ();
-            vec.push_back ({
-                .id = obj["id"].toInteger (),
-                .grade = obj["grade"].toDouble (),
-                .user = obj["user"].toString (),
-                .uname = obj["uname"].toString (),
-                .evaluation = obj["evaluation"].toString (),
-            });
-          }
-
-        auto list = ui.list;
-        for (auto &eval : vec)
-          {
-            auto widget = new Eitem (list, eval);
-            auto item = new QListWidgetItem (list);
-
-            item->setSizeHint (widget->sizeHint ());
-            item->setData (Qt::UserRole,
-                           QVariant::fromValue (std::move (eval)));
-
-            list->setItemWidget (item, widget);
-          }
-      },
-      nam);
-}
-
-void
 Home::load_dish ()
 {
   sts = stat::DISH;
@@ -130,32 +73,19 @@ Home::load_dish ()
         if (!res.has_value ())
           return;
 
-        auto vec = QVector<Dish> ();
         auto arr = res.value ()["data"].toArray ();
-        for (auto const &item : arr)
+        for (auto item : arr)
           {
-            auto const &obj = item.toObject ();
-            vec.push_back ({
-                .id = obj["id"].toInteger (),
-                .price = obj["price"].toDouble (),
-                .name = obj["name"].toString (),
-                .user = obj["user"].toString (),
-                .uname = obj["uname"].toString (),
-                .position = obj["position"].toString (),
-            });
-          }
-
-        auto list = ui.list;
-        for (auto &dish : vec)
-          {
-            auto widget = new Ditem (list, dish);
-            auto item = new QListWidgetItem (list);
-
-            item->setSizeHint (widget->sizeHint ());
-            item->setData (Qt::UserRole,
-                           QVariant::fromValue (std::move (dish)));
-
-            list->setItemWidget (item, widget);
+            auto obj = item.toObject ();
+            auto dish = (Dish){
+              .id = obj["id"].toInteger (),
+              .price = obj["price"].toDouble (),
+              .name = obj["name"].toString (),
+              .user = obj["user"].toString (),
+              .uname = obj["uname"].toString (),
+              .position = obj["position"].toString (),
+            };
+            new DishItem (ui.list, std::move (dish));
           }
 
         if (typ == type::MERCHANT)
@@ -165,71 +95,52 @@ Home::load_dish ()
 }
 
 void
-Home::sort_changed (bool checked)
+Home::load_eval ()
 {
-  static bool is_sorting;
-  if (is_sorting)
-    return;
+  auto id = dynamic_cast<DishItem *> (ui.list->currentItem ())->data.id;
 
-  is_sorting = true;
-  auto ui_list = ui.list;
-  auto size = ui_list->count ();
-  auto list = QList<QListWidgetItem *> ();
+  sts = stat::EVA;
+  ui.list->clear ();
+  ui.list->clearSelection ();
+  ui.group_2->setTitle ("评价列表");
 
-  if (size < 2)
-    {
-      is_sorting = false;
-      return;
-    }
+  ui.pbtn4->setEnabled (false);
+  ui.pbtn5->setEnabled (false);
+  ui.pbtn6->setEnabled (false);
 
-  for (; size > 0;)
-    list.push_back (ui_list->takeItem (--size));
+  static QNetworkAccessManager *nam;
 
-  std::sort (list.begin (), list.end (),
-             [this, checked] (QListWidgetItem *a, QListWidgetItem *b) {
-               auto num1 = double ();
-               auto num2 = double ();
+  auto req_data = QJsonObject ();
+  req_data["id"] = qint64 (id);
 
-               if (sts == stat::DISH)
-                 {
-                   auto const &dish1 = a->data (Qt::UserRole).value<Dish> ();
-                   auto const &dish2 = b->data (Qt::UserRole).value<Dish> ();
-                   num1 = dish1.price;
-                   num2 = dish2.price;
-                 }
+  nam = Http::post (
+      URL_EVA_LIST, req_data,
+      [this] (QNetworkReply *reply) {
+        auto res = Http::get_data (reply, this);
+        if (!res.has_value ())
+          return;
 
-               if (sts == stat::EVA)
-                 {
-                   auto const &eval1 = a->data (Qt::UserRole).value<Eval> ();
-                   auto const &eval2 = b->data (Qt::UserRole).value<Eval> ();
-                   num1 = eval1.grade;
-                   num2 = eval2.grade;
-                 }
+        auto arr = res.value ()["data"].toArray ();
+        for (auto elem : arr)
+          {
+            auto obj = elem.toObject ();
+            auto eval = (Eval){
+              .id = obj["id"].toInteger (),
+              .grade = obj["grade"].toDouble (),
+              .user = obj["user"].toString (),
+              .uname = obj["uname"].toString (),
+              .evaluation = obj["evaluation"].toString (),
+            };
+            new EvalItem (ui.list, std::move (eval));
+          }
+      },
+      nam);
+}
 
-               return checked ? num1 > num2 : num1 < num2;
-             });
-
-  if (sts == stat::DISH)
-    for (auto item : list)
-      {
-        auto const &dish = item->data (Qt::UserRole).value<Dish> ();
-        auto widget = new Ditem (this, dish);
-
-        ui_list->addItem (item);
-        ui_list->setItemWidget (item, widget);
-      }
-
-  if (sts == stat::EVA)
-    for (auto item : list)
-      {
-        auto const &eval = item->data (Qt::UserRole).value<Eval> ();
-        auto widget = new Eitem (this, eval);
-
-        ui_list->addItem (item);
-        ui_list->setItemWidget (item, widget);
-      }
-
-  is_sorting = false;
+void
+Home::sort_changed (bool dec)
+{
+  ui.list->sortItems (dec ? Qt::DescendingOrder : Qt::AscendingOrder);
 }
 
 void
@@ -265,7 +176,7 @@ Home::on_pbtn3_clicked ()
 void
 Home::on_pbtn4_clicked ()
 {
-  load_eva ();
+  load_eval ();
 }
 
 void

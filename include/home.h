@@ -30,9 +30,9 @@ public:
   Home (type typ, info_type info);
 
 public:
-  void load_eva ();
   void load_info ();
   void load_dish ();
+  void load_eval ();
 
 private:
   void sort_changed (bool checked);
