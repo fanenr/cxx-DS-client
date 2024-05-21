@@ -28,8 +28,7 @@ qint64
 Eva::get_id ()
 {
   auto item = parent->ui.list->currentItem ();
-  auto eval = (item->data (Qt::UserRole)).value<Dish> ();
-  return eval.id;
+  return dynamic_cast<DishItem *> (item)->data.id;
 }
 
 void
