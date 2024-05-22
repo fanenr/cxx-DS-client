@@ -14,9 +14,7 @@ private:
   Ui::Log ui = {};
 
 public:
-  Log () { ui.setupUi (this); };
-
-public:
+  Log () : QDialog () { ui.setupUi (this); };
   type category ();
 
 private slots:

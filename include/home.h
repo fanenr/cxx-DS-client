@@ -19,24 +19,17 @@ class Home : public QMainWindow
   friend class Eva;
 
 private:
-  using info_type = QMap<QString, QString>;
-
+  using info_t = QMap<QString, QString>;
   Ui::Home ui = {};
-  info_type info;
+  info_t info;
   type typ;
   stat sts;
 
 public:
-  Home (type typ, info_type info);
-
-public:
+  Home (type typ, info_t info);
   void load_info ();
   void load_dish ();
   void load_eval ();
-
-private:
-  void sort_changed (bool checked);
-  void item_selected (QListWidgetItem *item, QListWidgetItem *prev);
 
 private slots:
   void on_pbtn1_clicked ();

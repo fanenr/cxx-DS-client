@@ -16,8 +16,6 @@ private:
 public:
   Mod (Home *parent);
   ~Mod () { setParent (nullptr); }
-
-public:
   int exec () override;
 
 private slots:
