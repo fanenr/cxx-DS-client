@@ -15,8 +15,6 @@ private:
 
 public:
   Reg (Log *parent);
-
-public:
   int exec () override;
 
 private slots:

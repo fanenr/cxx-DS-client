@@ -8,8 +8,8 @@
 
 #include <QJsonArray>
 
-Home::Home (type typ, info_type info)
-    : typ (typ), info (std::move (info)), QMainWindow ()
+Home::Home (type typ, info_t info)
+    : QMainWindow (), typ (typ), info (std::move (info))
 {
   ui.setupUi (this);
   setAttribute (Qt::WA_DeleteOnClose);
@@ -22,9 +22,19 @@ Home::Home (type typ, info_type info)
       ui.pbtn6->setText (tr ("修改菜品"));
     }
 
-  connect (ui.sort, &QCheckBox::toggled, this, &Home::sort_changed);
-  connect (ui.list, &QListWidget::currentItemChanged, this,
-           &Home::item_selected);
+  connect (ui.sort, &QCheckBox::toggled, [this] (bool dec) {
+    ui.list->sortItems (dec ? Qt::DescendingOrder : Qt::AscendingOrder);
+  });
+
+  connect (ui.list, &QListWidget::currentItemChanged,
+           [this] (auto item, auto prev) {
+             if (sts == stat::DISH && item)
+               {
+                 ui.pbtn4->setEnabled (true);
+                 ui.pbtn5->setEnabled (true);
+                 ui.pbtn6->setEnabled (true);
+               }
+           });
 
   load_info ();
   load_dish ();
@@ -135,23 +145,6 @@ Home::load_eval ()
           }
       },
       nam);
-}
-
-void
-Home::sort_changed (bool dec)
-{
-  ui.list->sortItems (dec ? Qt::DescendingOrder : Qt::AscendingOrder);
-}
-
-void
-Home::item_selected (QListWidgetItem *item, QListWidgetItem *prev)
-{
-  if (sts == stat::DISH && item)
-    {
-      ui.pbtn4->setEnabled (true);
-      ui.pbtn5->setEnabled (true);
-      ui.pbtn6->setEnabled (true);
-    }
 }
 
 void
