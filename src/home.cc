@@ -67,41 +67,27 @@ Home::load_dish ()
   ui.list->clearSelection ();
   ui.group_2->setTitle ("菜品列表");
 
-  ui.pbtn3->setEnabled (false);
-  ui.pbtn4->setEnabled (false);
-  ui.pbtn5->setEnabled (false);
-  ui.pbtn6->setEnabled (false);
+  auto http = Http ();
+  auto reply = http.post (URL_MENU_LIST, {});
 
-  static QNetworkAccessManager *nam;
+  auto res = Http::get_data (reply, this);
+  if (!res.has_value ())
+    return;
 
-  nam = Http::post (
-      URL_MENU_LIST, {},
-      [this] (QNetworkReply *reply) {
-        ui.pbtn3->setEnabled (true);
-
-        auto res = Http::get_data (reply, this);
-        if (!res.has_value ())
-          return;
-
-        auto arr = res.value ()["data"].toArray ();
-        for (auto item : arr)
-          {
-            auto obj = item.toObject ();
-            auto dish = (Dish){
-              .id = obj["id"].toInteger (),
-              .price = obj["price"].toDouble (),
-              .name = obj["name"].toString (),
-              .user = obj["user"].toString (),
-              .uname = obj["uname"].toString (),
-              .position = obj["position"].toString (),
-            };
-            new DishItem (ui.list, std::move (dish));
-          }
-
-        if (typ == type::MERCHANT)
-          ui.pbtn5->setEnabled (true);
-      },
-      nam);
+  auto arr = res.value ()["data"].toArray ();
+  for (auto item : arr)
+    {
+      auto obj = item.toObject ();
+      auto dish = (Dish){
+        .id = obj["id"].toInteger (),
+        .price = obj["price"].toDouble (),
+        .name = obj["name"].toString (),
+        .user = obj["user"].toString (),
+        .uname = obj["uname"].toString (),
+        .position = obj["position"].toString (),
+      };
+      new DishItem (ui.list, std::move (dish));
+    }
 }
 
 void
