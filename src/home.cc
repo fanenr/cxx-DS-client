@@ -104,33 +104,29 @@ Home::load_eval ()
   ui.pbtn5->setEnabled (false);
   ui.pbtn6->setEnabled (false);
 
-  static QNetworkAccessManager *nam;
-
   auto req_data = QJsonObject ();
   req_data["id"] = qint64 (id);
 
-  nam = Http::post (
-      URL_EVA_LIST, req_data,
-      [this] (QNetworkReply *reply) {
-        auto res = Http::get_data (reply, this);
-        if (!res.has_value ())
-          return;
+  auto http = Http ();
+  auto reply = http.post (URL_EVA_LIST, req_data);
 
-        auto arr = res.value ()["data"].toArray ();
-        for (auto elem : arr)
-          {
-            auto obj = elem.toObject ();
-            auto eval = (Eval){
-              .id = obj["id"].toInteger (),
-              .grade = obj["grade"].toDouble (),
-              .user = obj["user"].toString (),
-              .uname = obj["uname"].toString (),
-              .evaluation = obj["evaluation"].toString (),
-            };
-            new EvalItem (ui.list, std::move (eval));
-          }
-      },
-      nam);
+  auto res = Http::get_data (reply, this);
+  if (!res.has_value ())
+    return;
+
+  auto arr = res.value ()["data"].toArray ();
+  for (auto elem : arr)
+    {
+      auto obj = elem.toObject ();
+      auto eval = (Eval){
+        .id = obj["id"].toInteger (),
+        .grade = obj["grade"].toDouble (),
+        .user = obj["user"].toString (),
+        .uname = obj["uname"].toString (),
+        .evaluation = obj["evaluation"].toString (),
+      };
+      new EvalItem (ui.list, std::move (eval));
+    }
 }
 
 void
